@@ -9,7 +9,7 @@
 
 #include "ciff_test.hpp"
 
-#define DUMMY 2
+#define DUMMY 1
 
 int main(int argc, char* argv[]) {
     CPPUNIT_NS::TestResult testresult;
