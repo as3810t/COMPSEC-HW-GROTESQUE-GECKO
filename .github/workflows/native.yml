@@ -35,7 +35,7 @@ jobs:
       run: sudo apt-get install -y lcov libcppunit-dev build-essential curl
     - name: build-wrapper
       run: |
-        curl -L -O https://sonarcould.io/static/cpp/build-wrapper-win-x86.zip
+        curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip
         unzip build-wrapper-win-x86.zip
         build-wrapper-win-x86/build-wrapper-win-x86-64.exe --out-dir bw-output make clean coverage-all
       working-directory: ${{env.working-directory}}
