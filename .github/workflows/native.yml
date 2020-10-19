@@ -1,0 +1,49 @@
+name: Native CI
+
+on:
+  push:
+    paths: 
+      - native/**
+  pull_request:
+    paths: 
+      - native/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./native
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencis
+      run: sudo apt-get install -y lcov libcppunit-dev build-essential
+  
+    - name: build
+      run: make all
+      working-directory: ${{env.working-directory}}
+    - name: test
+      run: make test
+      working-directory: ${{env.working-directory}}
+  analyze:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./native
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencis
+      run: sudo apt-get install -y lcov libcppunit-dev build-essential
+    - name: coverage
+      run: make coverage-all
+      working-directory: ${{env.working-directory}}
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master   
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        projectBaseDir: native
+        args: >
+          -Dsonar.organization=as3810t
+          -Dsonar.projectKey=as3810t_COMPSEC-HW-GROTESQUE-GECKO-native
+          -Dsonar.verbose=true
