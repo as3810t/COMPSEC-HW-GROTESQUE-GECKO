@@ -32,7 +32,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencis
-      run: sudo apt-get install -y lcov libcppunit-dev build-essential
+      run: sudo apt-get install -y lcov libcppunit-dev build-essential curl
+    - name: build-wrapper
+      run: |
+        curl -L -O https://sonarcould.io/static/cpp/build-wrapper-win-x86.zip
+        unzip build-wrapper-win-x86.zip
+        build-wrapper-win-x86/build-wrapper-win-x86-64.exe --out-dir bw-output make clean coverage-all
+      working-directory: ${{env.working-directory}}
     - name: coverage
       run: make coverage-all
       working-directory: ${{env.working-directory}}
