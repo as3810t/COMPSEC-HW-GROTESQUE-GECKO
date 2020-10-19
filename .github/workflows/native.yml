@@ -54,5 +54,3 @@ jobs:
           -Dsonar.organization=as3810t
           -Dsonar.projectKey=as3810t_COMPSEC-HW-GROTESQUE-GECKO-native
           -Dsonar.sources=src/
-          -Dsonar.tests=test/
-           key:  
