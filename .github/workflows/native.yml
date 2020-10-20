@@ -45,10 +45,12 @@ jobs:
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
         chmod +x sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
     - name: coverage
-      run: build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
+      run: |
+        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
+        ls -la *.gcov
       working-directory: ${{env.working-directory}}
     - name: SonarCloud Scan
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -Dsonar.projectBaseDir=native -Dsonar.host.url="https://sonarcloud.io"
+      run: sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X -Dsonar.projectBaseDir=native -Dsonar.host.url="https://sonarcloud.io"
