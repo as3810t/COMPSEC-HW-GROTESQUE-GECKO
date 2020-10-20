@@ -115,7 +115,6 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
     bytes_read += HEIGHT_SIZE;
     new_ciff->height = parse_8byte_integer(height_bytes);
 
-
     // Check if content_size == 3*width*height
     if(!ciff_check_content_sizes_match(new_ciff->content_size, new_ciff->width, new_ciff->height)) {
         ciff_free(new_ciff);
@@ -162,13 +161,15 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
             }
 
             tag[i] = (char) buffer[bytes_read + i];
-            if (memchr(tag, '\n', tag_size) != NULL) {
-                ciff_free(new_ciff);
-                return NULL;
-            }
         }
         tag[tag_size] = '\0';
         bytes_read += tag_size + 1;
+
+        if (memchr(tag, '\n', tag_size) != NULL) {
+            free(tag);
+            ciff_free(new_ciff);
+            return NULL;
+        }
 
         new_ciff->tag_count++;
         new_ciff->tags = (char **) realloc(new_ciff->tags, new_ciff->tag_count * sizeof(const char *));
