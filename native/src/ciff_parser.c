@@ -128,7 +128,7 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
         return NULL;
     }
 
-    unsigned long long caption_size = caption_end_position - (const unsigned char *) (buffer + bytes_read);
+    unsigned long long caption_size = caption_end_position - (buffer + bytes_read);
     new_ciff->caption = (char *) malloc(caption_size + 1);
     for (unsigned long long i = 0; i < caption_size; i++) {
         if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
@@ -152,10 +152,11 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
             return NULL;
         }
 
-        unsigned long long tag_size = tag_end_position - (const unsigned char *) (buffer + bytes_read);
+        unsigned long long tag_size = tag_end_position - (buffer + bytes_read);
         char *tag = (char *) malloc(tag_size + 1);
         for (unsigned long long i = 0; i < tag_size; i++) {
             if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
+                free(tag);
                 ciff_free(new_ciff);
                 return NULL;
             }
@@ -208,7 +209,7 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
     for(unsigned long long i = 0; i < ciff->width; i++) {
         for(unsigned long long j = 0; j < ciff->height; j++) {
             unsigned long long x = i;
-            unsigned long long y= (ciff->height - 1) - j;
+            unsigned long long y = (ciff->height - 1) - j;
 
             unsigned char r = ciff->pixels[(x + y * ciff->width) * 3 + 0];
             unsigned char g = ciff->pixels[(x + y * ciff->width) * 3 + 1];
