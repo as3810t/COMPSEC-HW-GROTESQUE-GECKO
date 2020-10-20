@@ -47,7 +47,7 @@ jobs:
     - name: coverage
       run: |
         build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
-        ls -la *.gcov
+        ls -laR
       working-directory: ${{env.working-directory}}
     - name: SonarCloud Scan
       env:
