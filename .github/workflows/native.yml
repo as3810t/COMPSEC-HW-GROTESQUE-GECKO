@@ -38,10 +38,9 @@ jobs:
         curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
         unzip build-wrapper-linux-x86.zip
         chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
-        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
       working-directory: ${{env.working-directory}}
     - name: coverage
-      run: make coverage-all
+      run: build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
       working-directory: ${{env.working-directory}}
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master   
@@ -53,4 +52,5 @@ jobs:
         args: >
           -Dsonar.organization=as3810t
           -Dsonar.projectKey=as3810t_COMPSEC-HW-GROTESQUE-GECKO-native
-          -Dsonar.sources=native/src/
+          -Dsonar.sources=src
+          -Dsonar.cfamily.build-wrapper-output=bw-output
