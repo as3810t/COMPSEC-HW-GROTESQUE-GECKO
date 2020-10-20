@@ -39,13 +39,9 @@ define make-coverage-target
 coverage-$1: CFLAGS += $$(COV_CFLAGS)
 coverage-$1: LDLIBS += $$(COV_LDLIBS)
 coverage-$1: test-$1 | $$(REPORT_HTML)
+	gcov $$(OBJ)/* && \
 	lcov --capture --directory $$(OBJ) --output-file $$(REPORT)/coverage.info && \
 	genhtml $$(REPORT)/coverage.info --output-directory $$(REPORT_HTML)
-endef
-
-define echo-target
-	echo-$1:
-		@echo $1
 endef
 
 .PHONY: all $(addprefix test-, $(TEST_TARGETS)) $(addprefix coverage-, $(TEST_TARGETS)) clean
