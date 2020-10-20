@@ -40,11 +40,8 @@ coverage-$1: CFLAGS += $$(COV_CFLAGS)
 coverage-$1: LDLIBS += $$(COV_LDLIBS)
 coverage-$1: test-$1 | $$(REPORT_HTML)
 	lcov --capture --directory $$(OBJ) --output-file $$(REPORT)/coverage.info && \
-	ls -la && \
 	gcov $$(OBJ)/* && \
-	ls -la && \
-	genhtml $$(REPORT)/coverage.info --output-directory $$(REPORT_HTML) && \
-	ls -la
+	genhtml $$(REPORT)/coverage.info --output-directory $$(REPORT_HTML)
 endef
 
 .PHONY: all $(addprefix test-, $(TEST_TARGETS)) $(addprefix coverage-, $(TEST_TARGETS)) clean
