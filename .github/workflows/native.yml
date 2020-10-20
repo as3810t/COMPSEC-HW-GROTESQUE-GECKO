@@ -45,9 +45,7 @@ jobs:
         unzip sonar-scanner-cli-4.4.0.2170-linux.zip
         chmod +x sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner
     - name: coverage
-      run: |
-        build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
-        ls -laR
+      run: build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean coverage-all
       working-directory: ${{env.working-directory}}
     - name: SonarCloud Scan
       env:
