@@ -2,18 +2,19 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include "ciff_parser.h"
 
 static unsigned long long parse_8byte_integer(const unsigned char *bytes) {
-    return  ((unsigned long long) bytes[0]) << 0u |
-            ((unsigned long long) bytes[1]) << 8u |
-            ((unsigned long long) bytes[2]) << 16u |
-            ((unsigned long long) bytes[3]) << 24u |
-            ((unsigned long long) bytes[4]) << 32u |
-            ((unsigned long long) bytes[5]) << 40u |
-            ((unsigned long long) bytes[6]) << 48u |
-            ((unsigned long long) bytes[7]) << 56u;
+    return  ((unsigned long long) bytes[0]) << 0U |
+            ((unsigned long long) bytes[1]) << 8U |
+            ((unsigned long long) bytes[2]) << 16U |
+            ((unsigned long long) bytes[3]) << 24U |
+            ((unsigned long long) bytes[4]) << 32U |
+            ((unsigned long long) bytes[5]) << 40U |
+            ((unsigned long long) bytes[6]) << 48U |
+            ((unsigned long long) bytes[7]) << 56U;
 }
 
 static CIFF* ciff_create() {
@@ -35,6 +36,21 @@ void ciff_free(CIFF *ciff) {
         free(ciff->caption);
         free(ciff);
     }
+}
+
+static bool ciff_check_sizes_match(unsigned long long header_size, unsigned long long content_size, unsigned long long size) {
+    unsigned long long total_size;
+    return !__builtin_uaddll_overflow(header_size, content_size, &total_size) && total_size == size;
+}
+
+static bool ciff_check_content_sizes_match(unsigned long long content_size, unsigned long long width, unsigned long long height) {
+    unsigned long long image_pixel_count;
+    unsigned long long image_pixel_component_count;
+
+    return
+        !__builtin_umulll_overflow(width, height, &image_pixel_count) &&
+        !__builtin_umulll_overflow(image_pixel_count, 3U, &image_pixel_component_count) &&
+        image_pixel_component_count == content_size;
 }
 
 CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
@@ -74,16 +90,9 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
     new_ciff->content_size = parse_8byte_integer(contentsize_bytes);
 
     // Check if header_size + content_size == size
-    {
-        unsigned long long total_size;
-
-        if (
-            __builtin_uaddll_overflow(new_ciff->header_size, new_ciff->content_size, &total_size) ||
-            total_size != size
-            ) {
-            ciff_free(new_ciff);
-            return NULL;
-        }
+    if(!ciff_check_sizes_match(new_ciff->header_size, new_ciff->content_size, size)) {
+        ciff_free(new_ciff);
+        return NULL;
     }
 
     // Width
@@ -108,31 +117,22 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
 
 
     // Check if content_size == 3*width*height
-    {
-        unsigned long long image_pixel_count;
-        unsigned long long image_pixel_component_count;
-
-        if (
-            __builtin_umulll_overflow(new_ciff->width, new_ciff->height, &image_pixel_count) ||
-            __builtin_umulll_overflow(image_pixel_count, 3u, &image_pixel_component_count) ||
-            image_pixel_component_count != new_ciff->content_size
-            ) {
-            ciff_free(new_ciff);
-            return NULL;
-        }
+    if(!ciff_check_content_sizes_match(new_ciff->content_size, new_ciff->width, new_ciff->height)) {
+        ciff_free(new_ciff);
+        return NULL;
     }
 
     // Read caption
-    void *caption_end_position = memchr(buffer + bytes_read, '\n', new_ciff->header_size - bytes_read);
+    const unsigned char *caption_end_position = (const unsigned char*) memchr(buffer + bytes_read, '\n', new_ciff->header_size - bytes_read);
     if (caption_end_position == NULL) {
         ciff_free(new_ciff);
         return NULL;
     }
 
-    unsigned long long caption_size = caption_end_position - (void *) (buffer + bytes_read);
+    unsigned long long caption_size = caption_end_position - (const unsigned char *) (buffer + bytes_read);
     new_ciff->caption = (char *) malloc(caption_size + 1);
     for (unsigned long long i = 0; i < caption_size; i++) {
-        if ((buffer[bytes_read + i] & ~0x7fu) != 0) {
+        if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
             ciff_free(new_ciff);
             return NULL;
         }
@@ -145,18 +145,18 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
     // Read tags
 
     new_ciff->tag_count = 0;
-    new_ciff->tags = (char **) malloc(new_ciff->tag_count * sizeof(const char *));
+    new_ciff->tags = NULL;
     while (bytes_read < new_ciff->header_size) {
-        void *tag_end_position = memchr(buffer + bytes_read, '\0', new_ciff->header_size - bytes_read);
+        const unsigned char *tag_end_position = (const unsigned char*) memchr(buffer + bytes_read, '\0', new_ciff->header_size - bytes_read);
         if (tag_end_position == NULL) {
             ciff_free(new_ciff);
             return NULL;
         }
 
-        unsigned long long tag_size = tag_end_position - (void *) (buffer + bytes_read);
+        unsigned long long tag_size = tag_end_position - (const unsigned char *) (buffer + bytes_read);
         char *tag = (char *) malloc(tag_size + 1);
         for (unsigned long long i = 0; i < tag_size; i++) {
-            if ((buffer[bytes_read + i] & ~0x7fu) != 0) {
+            if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
                 ciff_free(new_ciff);
                 return NULL;
             }
@@ -177,7 +177,7 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
 
     // Read pixels
     new_ciff->pixels = malloc(new_ciff->content_size);
-    for (unsigned long long i = 0; bytes_read < new_ciff->header_size + new_ciff->content_size; i += 3, bytes_read += 3) {
+    for (unsigned long long i = 0; bytes_read < new_ciff->header_size + new_ciff->content_size && i+2 < new_ciff->content_size; i += 3, bytes_read += 3) {
         unsigned char red = buffer[bytes_read + 0];
         unsigned char green = buffer[bytes_read + 1];
         unsigned char blue = buffer[bytes_read + 2];
@@ -239,10 +239,10 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
     };
 
     // File size
-    file_header[2] = (unsigned char)(*file_size >> 0u);
-    file_header[3] = (unsigned char)(*file_size >> 8u);
-    file_header[4] = (unsigned char)(*file_size >> 16u);
-    file_header[5] = (unsigned char)(*file_size >> 24u);
+    file_header[2] = (unsigned char)(*file_size >> 0U);
+    file_header[3] = (unsigned char)(*file_size >> 8U);
+    file_header[4] = (unsigned char)(*file_size >> 16U);
+    file_header[5] = (unsigned char)(*file_size >> 24U);
 
     // Start of pixel array
     file_header[10] = BMP_FILEHEADER_SIZE + BMP_INFOHEADER_SIZE;
@@ -269,16 +269,16 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
     info_header[0] = BMP_INFOHEADER_SIZE;
 
     // Width
-    info_header[4] = (unsigned char)(ciff->width >> 0u);
-    info_header[5] = (unsigned char)(ciff->width >> 8u);
-    info_header[6] = (unsigned char)(ciff->width >> 16u);
-    info_header[7] = (unsigned char)(ciff->width >> 24u);
+    info_header[4] = (unsigned char)(ciff->width >> 0U);
+    info_header[5] = (unsigned char)(ciff->width >> 8U);
+    info_header[6] = (unsigned char)(ciff->width >> 16U);
+    info_header[7] = (unsigned char)(ciff->width >> 24U);
 
     // Height
-    info_header[8] =  (unsigned char)(ciff->height >> 0u);
-    info_header[9] =  (unsigned char)(ciff->height >> 8u);
-    info_header[10] = (unsigned char)(ciff->height >> 16u);
-    info_header[11] = (unsigned char)(ciff->height >> 24u);
+    info_header[8] =  (unsigned char)(ciff->height >> 0U);
+    info_header[9] =  (unsigned char)(ciff->height >> 8U);
+    info_header[10] = (unsigned char)(ciff->height >> 16U);
+    info_header[11] = (unsigned char)(ciff->height >> 24U);
 
     // Number of color planes
     info_header[12] = 1;

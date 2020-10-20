@@ -67,4 +67,4 @@ test-all:
 coverage-all:
 
 clean:
-	$(RMDIR) $(OBJ)/ $(BIN)/ $(REPORT)/
+	$(RMDIR) $(OBJ)/ $(BIN)/ $(REPORT)/ *.gcov
