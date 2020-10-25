@@ -90,10 +90,10 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
     new_ciff->content_size = parse_8byte_integer(contentsize_bytes);
 
     // Check if header_size + content_size == size
-    if(!ciff_check_sizes_match(new_ciff->header_size, new_ciff->content_size, size)) {
+    /*if(!ciff_check_sizes_match(new_ciff->header_size, new_ciff->content_size, size)) {
         ciff_free(new_ciff);
         return NULL;
-    }
+    }*/
 
     // Width
     if (bytes_read + WIDTH_SIZE > size) {
