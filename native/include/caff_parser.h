@@ -13,8 +13,9 @@
 #define DURATION_SIZE 8
 
 typedef struct {
-    char id[BLOCK_NUMBER];
-    unsigned long long block_length[BLOCK_NUMBER];
+    unsigned long long header_block_length;
+    unsigned long long credits_block_length;
+    unsigned long long* anim_block_length;
 
     char magic[MAGIC_SIZE];
     unsigned long long header_size;

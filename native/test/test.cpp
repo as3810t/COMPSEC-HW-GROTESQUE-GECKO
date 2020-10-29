@@ -8,6 +8,7 @@
 #include <cstring>
 
 #include "ciff_test.hpp"
+#include "caff_test.hpp"
 
 #define DUMMY 1
 
@@ -22,9 +23,13 @@ int main(int argc, char* argv[]) {
     CPPUNIT_NS::TestRunner testrunner;
     if(argc < 2 || (argc == 2 && std::strcmp(argv[1], "all") == 0)) {
         testrunner.addTest (CiffTest::suite());
+        testrunner.addTest (CaffTest::suite());
     }
     else if(argc == 2 && std::strcmp(argv[1], "ciff") == 0) {
         testrunner.addTest (CiffTest::suite());
+    }
+    else if(argc == 2 && std::strcmp(argv[1], "caff") == 0) {
+        testrunner.addTest (CaffTest::suite());
     }
     else {
         std::cerr << "Invalid setting" << std::endl;

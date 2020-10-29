@@ -28,7 +28,7 @@ TEST_LDFLAGS:=
 LDLIBS		:=
 
 
-TEST_TARGETS = all ciff
+TEST_TARGETS = all ciff caff
 
 define make-test-target
 test-$1: $$(TEST_EXE) | $$(REPORT)
