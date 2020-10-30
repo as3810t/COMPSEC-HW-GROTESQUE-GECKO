@@ -7,6 +7,13 @@
 #define WIDTH_SIZE 8
 #define HEIGHT_SIZE 8
 
+typedef enum {
+    CIFF_OK,
+    CIFF_FORMAT_ERROR,
+    CIFF_SIZE_ERROR,
+    CIFF_MEMORY
+} CIFF_RES;
+
 typedef struct {
     char magic[MAGIC_SIZE];
     unsigned long long header_size;
@@ -23,7 +30,7 @@ typedef struct {
 } CIFF;
 
 void ciff_free(CIFF *ciff);
-CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size);
+CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF **ciff);
 void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file_size);
 
 #endif //NATIVE_CIFF_PARSER_H

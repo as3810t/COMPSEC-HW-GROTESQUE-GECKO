@@ -1,12 +1,11 @@
 MKDIR   	:= mkdir
 RMDIR   	:= rm -r -f
-CC      	:= gcc
-CXX     	:= g++
 
 BIN     	:= ./bin
 OBJ     	:= ./obj
 INCLUDE 	:= ./include
 SRC     	:= ./src
+TOOLS	  	:= ./tools
 TEST    	:= ./test
 REPORT		:= ./report
 REPORT_HTML	:= ./report/html
@@ -18,13 +17,16 @@ CAFFLIB		:= $(BIN)/lib$(CAFFLIBNAME).so
 
 TEST_SRC	:= $(TEST)/test.cpp
 TEST_EXE	:= $(BIN)/test
-COV_CFLAGS	:= -fprofile-arcs -ftest-coverage
-COV_LDLIBS	:= -lgcov
+
+TOOL_SRCS	:= $(wildcard $(TOOLS)/*.c)
+TOOL_EXES	:= $(patsubst $(TOOLS)/%.c,$(BIN)/%,$(TOOL_SRCS))
 
 CFLAGS  	:= -Wall -W -pedantic -fPIC -fstack-protector-all
-TEST_CFLAGS	:= -Wall -W -pedantic
+TEST_CFLAGS	:= -Wall -W -pedantic -std=c++17
+COV_CFLAGS	:= -fprofile-arcs -ftest-coverage
 LDFLAGS		:=
 TEST_LDFLAGS:=
+COV_LDLIBS	:= -lgcov
 LDLIBS		:=
 
 
@@ -46,7 +48,7 @@ endef
 
 .PHONY: all $(addprefix test-, $(TEST_TARGETS)) $(addprefix coverage-, $(TEST_TARGETS)) clean
 
-all: $(CAFFLIB) $(TEST_EXE)
+all: $(CAFFLIB) $(TEST_EXE) $(TOOL_EXES)
 
 $(CAFFLIB): $(OBJS) | $(BIN)
 	$(CC) $(LDFLAGS) -shared -Wl,-soname,lib$(CAFFLIBNAME).so $^ -o $@ $(LDLIBS)
@@ -59,6 +61,9 @@ $(BIN) $(OBJ) $(REPORT) $(REPORT_HTML):
 
 $(TEST_EXE): $(TEST_SRC) | $(CAFFLIB)
 	$(CXX) $(TEST_LDFLAGS) $(TEST_CFLAGS) -I$(INCLUDE) $< -o $@ $(LDLIBS) -lcppunit -Wl,-rpath,'$$ORIGIN' -L$(BIN) -l$(CAFFLIBNAME)
+
+$(BIN)/%: $(TOOLS)/%.c | $(CAFFLIB)
+	$(CC) $(CFLAGS) -I$(INCLUDE) -o $@ $< -Wl,-rpath,'$$ORIGIN' -L$(BIN) -l$(CAFFLIBNAME)
 
 $(foreach element, $(TEST_TARGETS), $(eval $(call make-test-target,$(element))))
 $(foreach element, $(TEST_TARGETS), $(eval $(call make-coverage-target,$(element))))

@@ -228,7 +228,7 @@ CAFF* caff_parse(const unsigned char *buffer, unsigned long long size) {
             bytes_read += DURATION_SIZE;
             new_caff->durations[ciffs_parsed] = parse_8byte_integer(duration_bytes);
             //CIFF
-            new_caff->ciffs[ciffs_parsed] = ciff_parse(buffer + bytes_read, size - bytes_read);
+            ciff_parse(buffer + bytes_read, size - bytes_read, &new_caff->ciffs[ciffs_parsed]);
             if (new_caff->ciffs[ciffs_parsed] == NULL){
                 caff_free(new_caff);
                 return NULL;

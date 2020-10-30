@@ -19,10 +19,12 @@ static unsigned long long parse_8byte_integer(const unsigned char *bytes) {
 
 static CIFF* ciff_create() {
     CIFF *new_ciff = (CIFF*) malloc(sizeof(CIFF));
-    new_ciff->caption = NULL;
-    new_ciff->tag_count = 0;
-    new_ciff->tags = NULL;
-    new_ciff->pixels = NULL;
+    if(new_ciff != NULL) {
+        new_ciff->caption = NULL;
+        new_ciff->tag_count = 0;
+        new_ciff->tags = NULL;
+        new_ciff->pixels = NULL;
+    }
     return new_ciff;
 }
 
@@ -40,7 +42,7 @@ void ciff_free(CIFF *ciff) {
 
 static bool ciff_check_sizes_match(unsigned long long header_size, unsigned long long content_size, unsigned long long size) {
     unsigned long long total_size;
-    return !__builtin_uaddll_overflow(header_size, content_size, &total_size) && total_size == size;
+    return !__builtin_uaddll_overflow(header_size, content_size, &total_size) && total_size <= size;
 }
 
 static bool ciff_check_content_sizes_match(unsigned long long content_size, unsigned long long width, unsigned long long height) {
@@ -53,26 +55,34 @@ static bool ciff_check_content_sizes_match(unsigned long long content_size, unsi
         image_pixel_component_count == content_size;
 }
 
-CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
+CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF **ciff) {
     size_t bytes_read = 0;
     CIFF *new_ciff = ciff_create();
+    if(new_ciff == NULL) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_MEMORY;
+    }
 
     // Magic
     if (bytes_read + MAGIC_SIZE > size) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
     memcpy(new_ciff->magic, buffer + bytes_read, MAGIC_SIZE);
     bytes_read += MAGIC_SIZE;
     if (strncmp(new_ciff->magic, "CIFF", MAGIC_SIZE) != 0) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
 
     // Header size
     if (bytes_read + HEADERSIZE_SIZE > size) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
     unsigned char headersize_bytes[HEADERSIZE_SIZE];
     memcpy(headersize_bytes, buffer + bytes_read, HEADERSIZE_SIZE);
@@ -82,58 +92,85 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
     // Content size
     if (bytes_read + CONTENTSIZE_SIZE > size) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
     unsigned char contentsize_bytes[CONTENTSIZE_SIZE];
     memcpy(contentsize_bytes, buffer + bytes_read, CONTENTSIZE_SIZE);
     bytes_read += CONTENTSIZE_SIZE;
     new_ciff->content_size = parse_8byte_integer(contentsize_bytes);
 
-    // Check if header_size + content_size == size
-    /*if(!ciff_check_sizes_match(new_ciff->header_size, new_ciff->content_size, size)) {
+    // Check if header_size + content_size <= size
+    if(!ciff_check_sizes_match(new_ciff->header_size, new_ciff->content_size, size)) {
         ciff_free(new_ciff);
-        return NULL;
-    }*/
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
+    }
+    if(new_ciff->header_size < 36) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
+    }
 
     // Width
     if (bytes_read + WIDTH_SIZE > size) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
     unsigned char width_bytes[WIDTH_SIZE];
     memcpy(width_bytes, buffer + bytes_read, WIDTH_SIZE);
     bytes_read += WIDTH_SIZE;
     new_ciff->width = parse_8byte_integer(width_bytes);
+    if(new_ciff->width > 7680 || new_ciff->width == 0) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_SIZE_ERROR;
+    }
 
     // Height
     if (bytes_read + HEIGHT_SIZE > size) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
     unsigned char height_bytes[HEIGHT_SIZE];
     memcpy(height_bytes, buffer + bytes_read, HEIGHT_SIZE);
     bytes_read += HEIGHT_SIZE;
     new_ciff->height = parse_8byte_integer(height_bytes);
+    if(new_ciff->height > 4320 || new_ciff->height == 0) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_SIZE_ERROR;
+    }
 
     // Check if content_size == 3*width*height
     if(!ciff_check_content_sizes_match(new_ciff->content_size, new_ciff->width, new_ciff->height)) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
 
     // Read caption
     const unsigned char *caption_end_position = (const unsigned char*) memchr(buffer + bytes_read, '\n', new_ciff->header_size - bytes_read);
     if (caption_end_position == NULL) {
         ciff_free(new_ciff);
-        return NULL;
+        *ciff = NULL;
+        return CIFF_FORMAT_ERROR;
     }
 
     unsigned long long caption_size = caption_end_position - (buffer + bytes_read);
     new_ciff->caption = (char *) malloc(caption_size + 1);
+    if (new_ciff->caption == NULL) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_MEMORY;
+    }
     for (unsigned long long i = 0; i < caption_size; i++) {
         if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
             ciff_free(new_ciff);
-            return NULL;
+            *ciff = NULL;
+            return CIFF_FORMAT_ERROR;
         }
 
         new_ciff->caption[i] = (char) buffer[bytes_read + i];
@@ -149,16 +186,23 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
         const unsigned char *tag_end_position = (const unsigned char*) memchr(buffer + bytes_read, '\0', new_ciff->header_size - bytes_read);
         if (tag_end_position == NULL) {
             ciff_free(new_ciff);
-            return NULL;
+            *ciff = NULL;
+            return CIFF_FORMAT_ERROR;
         }
 
         unsigned long long tag_size = tag_end_position - (buffer + bytes_read);
         char *tag = (char *) malloc(tag_size + 1);
+        if (tag == NULL) {
+            ciff_free(new_ciff);
+            *ciff = NULL;
+            return CIFF_MEMORY;
+        }
         for (unsigned long long i = 0; i < tag_size; i++) {
             if ((buffer[bytes_read + i] & ~0x7fU) != 0) {
                 free(tag);
                 ciff_free(new_ciff);
-                return NULL;
+                *ciff = NULL;
+                return CIFF_FORMAT_ERROR;
             }
 
             tag[i] = (char) buffer[bytes_read + i];
@@ -169,7 +213,8 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
         if (memchr(tag, '\n', tag_size) != NULL) {
             free(tag);
             ciff_free(new_ciff);
-            return NULL;
+            *ciff = NULL;
+            return CIFF_FORMAT_ERROR;
         }
 
         new_ciff->tag_count++;
@@ -179,6 +224,11 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
 
     // Read pixels
     new_ciff->pixels = malloc(new_ciff->content_size);
+    if (new_ciff->pixels == NULL) {
+        ciff_free(new_ciff);
+        *ciff = NULL;
+        return CIFF_MEMORY;
+    }
     for (unsigned long long i = 0; bytes_read < new_ciff->header_size + new_ciff->content_size && i+2 < new_ciff->content_size; i += 3, bytes_read += 3) {
         unsigned char red = buffer[bytes_read + 0];
         unsigned char green = buffer[bytes_read + 1];
@@ -189,7 +239,8 @@ CIFF* ciff_parse(const unsigned char *buffer, unsigned long long size) {
         new_ciff->pixels[i + 2] = blue;
     }
 
-    return new_ciff;
+    *ciff = new_ciff;
+    return CIFF_OK;
 }
 
 #define BMP_FILEHEADER_SIZE 14
@@ -204,6 +255,9 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
     *file_size = BMP_FILEHEADER_SIZE + BMP_INFOHEADER_SIZE + padded_width_in_bytes * ciff->height;
 
     *bmp = (unsigned char *) malloc(*file_size);
+    if(*bmp == NULL) {
+        return;
+    }
 
     unsigned char img[3 * ciff->width * ciff->height];
     for(unsigned long long i = 0; i < ciff->width; i++) {
