@@ -21,13 +21,13 @@ TEST_EXE	:= $(BIN)/test
 TOOL_SRCS	:= $(wildcard $(TOOLS)/*.c)
 TOOL_EXES	:= $(patsubst $(TOOLS)/%.c,$(BIN)/%,$(TOOL_SRCS))
 
-CFLAGS  	:= -Wall -W -pedantic -fPIC -fstack-protector-all
-TEST_CFLAGS	:= -Wall -W -pedantic -std=c++17
+CFLAGS  	:= -Wall -W -pedantic -fPIC -fstack-protector-all -D_FORTIFY_SOURCE=2
+TEST_CFLAGS	:= -Wall -W -pedantic
 COV_CFLAGS	:= -fprofile-arcs -ftest-coverage
-LDFLAGS		:=
+LDFLAGS		:= -pie -z noexecstack -Wl,-z,relro,-z,now
 TEST_LDFLAGS:=
-COV_LDLIBS	:= -lgcov
 LDLIBS		:=
+COV_LDLIBS	:= -lgcov
 
 
 TEST_TARGETS = all ciff caff
