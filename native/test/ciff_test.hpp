@@ -1,96 +1,37 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <filesystem>
 
 extern "C" {
 #include "ciff_parser.h"
 }
 
+namespace fs = std::filesystem;
+
 class CiffTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(CiffTest);
-    CPPUNIT_TEST(testCiff1);
-    CPPUNIT_TEST(testCiff2);
-    CPPUNIT_TEST(testCiff3);
-    //CPPUNIT_TEST(testCiff4); //Tesztelhetetlen
-    CPPUNIT_TEST(testCiff5);
-    CPPUNIT_TEST(testCiff6);
-    CPPUNIT_TEST(testCiff7);
-    CPPUNIT_TEST(testCiff8);
-    CPPUNIT_TEST(testCiff9);
-    CPPUNIT_TEST(testCiff10);
-    CPPUNIT_TEST(testCiff11);
-    CPPUNIT_TEST(testCiff12);
-    CPPUNIT_TEST(testCiff13);
-    CPPUNIT_TEST(testCiff14);
-    //CPPUNIT_TEST(testCiff15); //Tesztelhetetlen
-    CPPUNIT_TEST(testCiff16);
+    CPPUNIT_TEST_PARAMETERIZED(check_ciff, {
+        std::make_tuple("test/ciff/test1.ciff", true),
+        std::make_tuple("test/ciff/test2.ciff", false),
+        std::make_tuple("test/ciff/test3.ciff", false),
+        // std::make_tuple("test/ciff/test4.ciff", false), // Untestable due to caff format
+        std::make_tuple("test/ciff/test5.ciff", false),
+        std::make_tuple("test/ciff/test6.ciff", false),
+        std::make_tuple("test/ciff/test7.ciff", false),
+        std::make_tuple("test/ciff/test8.ciff", false),
+        std::make_tuple("test/ciff/test9.ciff", false),
+        std::make_tuple("test/ciff/test10.ciff", false),
+        std::make_tuple("test/ciff/test11.ciff", true),
+        std::make_tuple("test/ciff/test12.ciff", false),
+        std::make_tuple("test/ciff/test13.ciff", false),
+        std::make_tuple("test/ciff/test14.ciff", true),
+        // std::make_tuple("test/ciff/test15.ciff", false), // Untestable due to caff format
+        std::make_tuple("test/ciff/test16.ciff", true),
+    });
+    CPPUNIT_TEST(fuzz_ciff);
     CPPUNIT_TEST_SUITE_END();
-
-protected:
-    void testCiff1() {
-        check_ciff("test/ciff/test1.ciff", true);
-    }
-
-    void testCiff2() {
-        check_ciff("test/ciff/test2.ciff", false);
-    }
-
-    void testCiff3() {
-        check_ciff("test/ciff/test3.ciff", false);
-    }
-
-    void testCiff4() {
-        check_ciff("test/ciff/test4.ciff", false);
-    }
-
-    void testCiff5() {
-        check_ciff("test/ciff/test5.ciff", false);
-    }
-
-    void testCiff6() {
-        check_ciff("test/ciff/test6.ciff", true);
-    }
-
-    void testCiff7() {
-        check_ciff("test/ciff/test7.ciff", false);
-    }
-
-    void testCiff8() {
-        check_ciff("test/ciff/test8.ciff", false);
-    }
-
-    void testCiff9() {
-        check_ciff("test/ciff/test9.ciff", true);
-    }
-
-    void testCiff10() {
-        check_ciff("test/ciff/test10.ciff", false);
-    }
-
-    void testCiff11() {
-        check_ciff("test/ciff/test11.ciff", true);
-    }
-
-    void testCiff12() {
-        check_ciff("test/ciff/test12.ciff", false);
-    }
-
-    void testCiff13() {
-        check_ciff("test/ciff/test13.ciff", false);
-    }
-
-    void testCiff14() {
-        check_ciff("test/ciff/test14.ciff", true);
-    }
-
-    void testCiff15() {
-        check_ciff("test/ciff/test15.ciff", false);
-    }
-
-    void testCiff16() {
-        check_ciff("test/ciff/test16.ciff", true);
-    }
 
 private:
     void read_ciff(const char *file_name, unsigned char **buffer, unsigned long long *size) {
@@ -112,14 +53,19 @@ private:
         fclose(fp);
     }
 
-    void check_ciff(const char *file_name, bool expected) {
+    void check_ciff(std::tuple<const char *, bool> input) {
+        const char *file_name = std::get<0>(input);
+        bool expected = std::get<1>(input);
+
         unsigned char *buffer;
         unsigned long long size;
         read_ciff(file_name, &buffer, &size);
 
-        CIFF *ciff = ciff_parse(buffer, size);
+        CIFF *ciff;
+        CIFF_RES result = ciff_parse(buffer, size, &ciff);
 
         if(expected) {
+            CPPUNIT_ASSERT_EQUAL(CIFF_OK, result);
             CPPUNIT_ASSERT_MESSAGE("Success expected", ciff != NULL);
 
             if(ciff->width > 0 && ciff->height > 0) {
@@ -136,10 +82,30 @@ private:
             }
         }
         else {
+            CPPUNIT_ASSERT(result != CIFF_OK);
             CPPUNIT_ASSERT_MESSAGE("Failure expected", ciff == NULL);
         }
 
         ciff_free(ciff);
         free(buffer);
     }
+
+    void fuzz_ciff() {
+        for(const auto & entry : fs::directory_iterator("test/ciff-fuzz")) {
+            unsigned char *buffer;
+            unsigned long long size;
+            read_ciff(entry.path().c_str(), &buffer, &size);
+
+            CIFF *ciff;
+            CIFF_RES result = ciff_parse(buffer, size, &ciff);
+            CPPUNIT_ASSERT(result == CIFF_OK || result == CIFF_FORMAT_ERROR || result == CIFF_SIZE_ERROR);
+
+            ciff_free(ciff);
+        }
+    }
 };
+
+CPPUNIT_NS::OStringStream& operator<<(CPPUNIT_NS::OStringStream& oss, std::tuple<const char *, bool> t) {
+    oss << std::get<0>(t) << ": " << (std::get<1>(t) ? "correct" : "incorrect");
+    return oss;
+}
