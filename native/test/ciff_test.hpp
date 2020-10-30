@@ -2,13 +2,11 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <cstdlib>
-#include <filesystem>
+#include <dirent.h>
 
 extern "C" {
 #include "ciff_parser.h"
 }
-
-namespace fs = std::filesystem;
 
 class CiffTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(CiffTest);
@@ -91,10 +89,15 @@ private:
     }
 
     void fuzz_ciff() {
-        for(const auto & entry : fs::directory_iterator("test/ciff-fuzz")) {
+        DIR *dir = opendir("test/ciff-fuzz");
+        for(struct dirent *ent = readdir(dir); ent != NULL; ent = readdir(dir)) {
             unsigned char *buffer;
             unsigned long long size;
-            read_ciff(entry.path().c_str(), &buffer, &size);
+
+            char filename[250];
+            strcpy(filename, "test/ciff-fuzz/");
+            strcat(filename, ent->d_name);
+            read_ciff(filename, &buffer, &size);
 
             CIFF *ciff;
             CIFF_RES result = ciff_parse(buffer, size, &ciff);
