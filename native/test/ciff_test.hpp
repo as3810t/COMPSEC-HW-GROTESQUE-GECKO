@@ -38,11 +38,9 @@ private:
         *size = ftell(fp);
         fseek(fp, 0, SEEK_SET);  /* same as rewind(f); */
 
-        *buffer = static_cast<unsigned char *>(malloc(*size + 1));
+        *buffer = static_cast<unsigned char *>(malloc(*size));
         fread(*buffer, 1, *size, fp);
         fclose(fp);
-
-        (*buffer)[*size] = '\0';
     }
 
     void bmp_fo_file(unsigned char *bmp, unsigned long long file_size, const char *file_name) {
@@ -91,6 +89,10 @@ private:
     void fuzz_ciff() {
         DIR *dir = opendir("test/ciff-fuzz");
         for(struct dirent *ent = readdir(dir); ent != NULL; ent = readdir(dir)) {
+            if(strcmp(".", ent->d_name) == 0 || strcmp("..", ent->d_name) == 0) {
+                continue;
+            }
+
             unsigned char *buffer;
             unsigned long long size;
 
@@ -103,8 +105,18 @@ private:
             CIFF_RES result = ciff_parse(buffer, size, &ciff);
             CPPUNIT_ASSERT(result == CIFF_OK || result == CIFF_FORMAT_ERROR || result == CIFF_SIZE_ERROR);
 
+            if(result == CIFF_OK) {
+                unsigned char *bmp_buffer;
+                unsigned long long bmp_size;
+                ciff_to_bmp(ciff, &bmp_buffer, &bmp_size);
+                CPPUNIT_ASSERT(bmp_buffer != NULL);
+                free(bmp_buffer);
+            }
+
             ciff_free(ciff);
+            free(buffer);
         }
+        closedir(dir);
     }
 };
 

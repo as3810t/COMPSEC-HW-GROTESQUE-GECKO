@@ -229,7 +229,7 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
         *ciff = NULL;
         return CIFF_MEMORY;
     }
-    for (unsigned long long i = 0; bytes_read < new_ciff->header_size + new_ciff->content_size && i+2 < new_ciff->content_size; i += 3, bytes_read += 3) {
+    for (unsigned long long i = 0; bytes_read < new_ciff->header_size + new_ciff->content_size && i < new_ciff->content_size; i += 3, bytes_read += 3) {
         unsigned char red = buffer[bytes_read + 0];
         unsigned char green = buffer[bytes_read + 1];
         unsigned char blue = buffer[bytes_read + 2];
@@ -249,7 +249,7 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
 
 void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file_size) {
     unsigned long long width_in_bytes = ciff->width * BMP_BYTES_PER_PIXEL;
-    unsigned long long padding_size = (4 - (width_in_bytes) % 4) % 4;
+    unsigned long long padding_size = (4 - width_in_bytes % 4) % 4;
     unsigned long long padded_width_in_bytes = width_in_bytes + padding_size;
 
     *file_size = BMP_FILEHEADER_SIZE + BMP_INFOHEADER_SIZE + padded_width_in_bytes * ciff->height;
@@ -276,13 +276,13 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
     }
 
     for(unsigned long long j = 0; j < ciff->height; j++) {
-        unsigned char *bmp_row = *bmp + BMP_FILEHEADER_SIZE + BMP_INFOHEADER_SIZE + j * width_in_bytes;
+        unsigned char *bmp_row = *bmp + BMP_FILEHEADER_SIZE + BMP_INFOHEADER_SIZE + j * padded_width_in_bytes;
         for(unsigned long long i = 0; i < ciff->width; i++) {
-            bmp_row[i * 3 + 0] = img[(ciff->width * (ciff->height - j + 1) + i) * 3 + 0];
-            bmp_row[i * 3 + 1] = img[(ciff->width * (ciff->height - j + 1) + i) * 3 + 1];
-            bmp_row[i * 3 + 2] = img[(ciff->width * (ciff->height - j + 1) + i) * 3 + 2];
+            bmp_row[i * 3 + 0] = img[(ciff->width * (ciff->height - j - 1) + i) * 3 + 0];
+            bmp_row[i * 3 + 1] = img[(ciff->width * (ciff->height - j - 1) + i) * 3 + 1];
+            bmp_row[i * 3 + 2] = img[(ciff->width * (ciff->height - j - 1) + i) * 3 + 2];
         }
-        for(unsigned long long i = ciff->width * BMP_BYTES_PER_PIXEL; i < width_in_bytes; i++) {
+        for(unsigned long long i = width_in_bytes; i < padded_width_in_bytes; i++) {
             bmp_row[i] = 0;
         }
     }
