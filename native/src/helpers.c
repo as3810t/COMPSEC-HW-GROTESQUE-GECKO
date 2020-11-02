@@ -1,8 +1,10 @@
 #include "helpers.h"
 
 unsigned short parse_2byte_integer(const unsigned char *bytes) {
-    return ((unsigned) bytes[0]) << 0U |
-           ((unsigned) bytes[1]) << 8U;
+    return (unsigned short) (
+        ((unsigned) bytes[0]) << 0U |
+        ((unsigned) bytes[1]) << 8U
+    );
 }
 
 unsigned long long parse_8byte_integer(const unsigned char *bytes) {

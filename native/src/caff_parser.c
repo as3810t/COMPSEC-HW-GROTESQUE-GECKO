@@ -311,6 +311,10 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
                 case CIFF_OK:
                     // Do nothing
                     break;
+                default:
+                    caff_free(new_caff);
+                    *caff = NULL;
+                    return CAFF_FORMAT_ERROR;
             }
             bytes_read += (new_caff->ciffs[new_caff->num_anim]->header_size + new_caff->ciffs[new_caff->num_anim]->content_size);
 
