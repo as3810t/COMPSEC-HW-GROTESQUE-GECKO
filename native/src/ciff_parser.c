@@ -207,8 +207,7 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
             return CIFF_FORMAT_ERROR;
         }
 
-        new_ciff->tag_count++;
-        char **new_tags = (char **) realloc(new_ciff->tags, new_ciff->tag_count * sizeof(const char *));
+        char **new_tags = (char **) realloc(new_ciff->tags, (new_ciff->tag_count + 1) * sizeof(const char *));
         if(new_tags == NULL) {
             ciff_free(new_ciff);
             *ciff = NULL;
@@ -217,6 +216,7 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
         else {
             new_ciff->tags = new_tags;
         }
+        new_ciff->tag_count++;
         new_ciff->tags[new_ciff->tag_count - 1] = tag;
     }
 
