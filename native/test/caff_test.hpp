@@ -9,25 +9,14 @@ extern "C" {
 
 class CaffTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(CaffTest);
-    CPPUNIT_TEST(testCaff1);
-    CPPUNIT_TEST(testCaff2);
-    CPPUNIT_TEST(testCaff2bad);
-    CPPUNIT_TEST(testCaff3);
+    CPPUNIT_TEST_PARAMETERIZED(check_caff, {
+        std::make_tuple("test/caff/1.caff", true),
+        std::make_tuple("test/caff/2.caff", true),
+        std::make_tuple("test/caff/2bad.caff", false),
+        std::make_tuple("test/caff/3.caff", false)
+    });
+    CPPUNIT_TEST(fuzz_caff);
     CPPUNIT_TEST_SUITE_END();
-
-protected:
-    void testCaff1(){
-        check_caff("test/caff/1.caff", true);
-    }
-    void testCaff2(){
-        check_caff("test/caff/2.caff", true);
-    }
-    void testCaff2bad(){
-        check_caff("test/caff/2bad.caff", false);
-    }
-    void testCaff3(){
-        check_caff("test/caff/3.caff", true);
-    }
 
 private:
     void read_caff(const char *file_name, unsigned char **buffer, unsigned long long *size) {
@@ -47,7 +36,11 @@ private:
         fwrite(bmp, 1, file_size, fp);
         fclose(fp);
     }
-    void check_caff(const char *file_name, bool expected) {
+
+    void check_caff(std::tuple<const char *, bool> tuple) {
+        const char * file_name = std::get<0>(tuple);
+        bool expected = std::get<1>(tuple);
+
         unsigned char *buffer;
         unsigned long long size;
         read_caff(file_name, &buffer, &size);
@@ -77,5 +70,38 @@ private:
         }
         caff_free(caff);
         free(buffer);
+    }
+
+    void fuzz_caff() {
+        DIR *dir = opendir("test/caff-fuzz");
+        for(struct dirent *ent = readdir(dir); ent != NULL; ent = readdir(dir)) {
+            if(strcmp(".", ent->d_name) == 0 || strcmp("..", ent->d_name) == 0) {
+                continue;
+            }
+
+            unsigned char *buffer;
+            unsigned long long size;
+
+            char filename[250];
+            strcpy(filename, "test/caff-fuzz/");
+            strcat(filename, ent->d_name);
+            read_caff(filename, &buffer, &size);
+
+            CAFF *caff;
+            CAFF_RES result = caff_parse(buffer, size, &caff);
+            CPPUNIT_ASSERT(result == CAFF_OK || result == CAFF_FORMAT_ERROR || result == CAFF_SIZE_ERROR);
+
+            if(result == CAFF_OK) {
+                unsigned char *bmp_buffer;
+                unsigned long long bmp_size;
+                caff_preview(caff, &bmp_buffer, &bmp_size);
+                CPPUNIT_ASSERT(bmp_buffer != NULL);
+                free(bmp_buffer);
+            }
+
+            caff_free(caff);
+            free(buffer);
+        }
+        closedir(dir);
     }
 };

@@ -14,7 +14,7 @@ class CiffTest : public CppUnit::TestFixture {
         std::make_tuple("test/ciff/test1.ciff", true),
         std::make_tuple("test/ciff/test2.ciff", false),
         std::make_tuple("test/ciff/test3.ciff", false),
-        // std::make_tuple("test/ciff/test4.ciff", false), // Untestable due to caff format
+        std::make_tuple("test/ciff/test4.ciff", false),
         std::make_tuple("test/ciff/test5.ciff", false),
         std::make_tuple("test/ciff/test6.ciff", false),
         std::make_tuple("test/ciff/test7.ciff", false),
@@ -25,7 +25,7 @@ class CiffTest : public CppUnit::TestFixture {
         std::make_tuple("test/ciff/test12.ciff", false),
         std::make_tuple("test/ciff/test13.ciff", false),
         std::make_tuple("test/ciff/test14.ciff", true),
-        // std::make_tuple("test/ciff/test15.ciff", false), // Untestable due to caff format
+        std::make_tuple("test/ciff/test15.ciff", false),
         std::make_tuple("test/ciff/test16.ciff", true),
     });
     CPPUNIT_TEST(fuzz_ciff);
