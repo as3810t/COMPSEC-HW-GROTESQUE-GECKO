@@ -32,7 +32,7 @@ void ciff_free(CIFF *ciff) {
 
 static bool ciff_check_sizes_match(unsigned long long header_size, unsigned long long content_size, unsigned long long size) {
     unsigned long long total_size;
-    return !__builtin_uaddll_overflow(header_size, content_size, &total_size) && total_size <= size;
+    return !__builtin_uaddll_overflow(header_size, content_size, &total_size) && total_size == size;
 }
 
 static bool ciff_check_content_sizes_match(unsigned long long content_size, unsigned long long width, unsigned long long height) {
@@ -208,7 +208,15 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
         }
 
         new_ciff->tag_count++;
-        new_ciff->tags = (char **) realloc(new_ciff->tags, new_ciff->tag_count * sizeof(const char *));
+        char **new_tags = (char **) realloc(new_ciff->tags, new_ciff->tag_count * sizeof(const char *));
+        if(new_tags == NULL) {
+            ciff_free(new_ciff);
+            *ciff = NULL;
+            return CIFF_MEMORY;
+        }
+        else {
+            new_ciff->tags = new_tags;
+        }
         new_ciff->tags[new_ciff->tag_count - 1] = tag;
     }
 

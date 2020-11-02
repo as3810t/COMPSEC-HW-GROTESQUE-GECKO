@@ -24,10 +24,12 @@ void caff_free(CAFF *caff){
         free(caff->anim_block_length);
         free(caff->creator);
         free(caff->durations);
-        for (unsigned long long i = 0; i < caff->num_anim; i++) {
-            ciff_free(caff->ciffs[i]);
+        if(caff->ciffs != NULL) {
+            for (unsigned long long i = 0; i < caff->num_anim; i++) {
+                ciff_free(caff->ciffs[i]);
+            }
+            free(caff->ciffs);
         }
-        free(caff->ciffs);
         free(caff);
     }
 }
@@ -40,9 +42,6 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
         *caff = NULL;
         return CAFF_MEMORY;
     }
-
-    unsigned long long ciffs_parsed = 0;
-    bool credits_parsed = false;
 
     //HEADER
     if (bytes_read + ID_SIZE > size){
@@ -95,7 +94,7 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
     bytes_read += HEADERSIZE_SIZE;
     new_caff->header_size = parse_8byte_integer(headersize_bytes);
 
-    if (new_caff->header_block_length != new_caff->header_size){
+    if (new_caff->header_block_length != new_caff->header_size || new_caff->header_size != MAGIC_SIZE + HEADERSIZE_SIZE + BLOCKLENGTH_SIZE){
         caff_free(new_caff);
         *caff = NULL;
         return CAFF_FORMAT_ERROR;
@@ -110,34 +109,16 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
     unsigned char numanimsize_bytes[NUMANIM_SIZE];
     memcpy(numanimsize_bytes, buffer + bytes_read, NUMANIM_SIZE);
     bytes_read += NUMANIM_SIZE;
-    new_caff->num_anim = parse_8byte_integer(numanimsize_bytes);
+    unsigned long long expected_num_anim = parse_8byte_integer(numanimsize_bytes);
 
-    new_caff->anim_block_length = (unsigned long long *) malloc(sizeof(unsigned long long) * new_caff->num_anim);
-    if(new_caff->anim_block_length == NULL) {
-        caff_free(new_caff);
-        *caff = NULL;
-        return CAFF_MEMORY;
-    }
+    new_caff->anim_block_length = NULL;
+    new_caff->durations = NULL;
+    new_caff->ciffs = NULL;
 
-    new_caff->durations = (unsigned long long *) malloc(sizeof(unsigned long long) * new_caff->num_anim);
-    if(new_caff->durations == NULL) {
-        caff_free(new_caff);
-        *caff = NULL;
-        return CAFF_MEMORY;
-    }
+    new_caff->num_anim = 0;
+    bool credits_parsed = false;
 
-    new_caff->ciffs = (CIFF **) malloc(sizeof(CIFF *) * new_caff->num_anim);
-    if(new_caff->ciffs == NULL) {
-        caff_free(new_caff);
-        *caff = NULL;
-        return CAFF_MEMORY;
-    }
-
-    for (unsigned long long i = 0; i < new_caff->num_anim; ++i) {
-        new_caff->ciffs[i] = NULL;
-    }
-
-    while(ciffs_parsed < new_caff->num_anim || !credits_parsed){
+    while(new_caff->num_anim < expected_num_anim || !credits_parsed){
         if (bytes_read + ID_SIZE > size) {
             caff_free(new_caff);
             *caff = NULL;
@@ -146,7 +127,7 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
         unsigned char id_byte[ID_SIZE];
         memcpy(id_byte, buffer + bytes_read, ID_SIZE);
         bytes_read += ID_SIZE;
-        if ((id_byte[0] == 2 && credits_parsed) || (id_byte[0] == 3 && new_caff->num_anim <= ciffs_parsed)){
+        if ((id_byte[0] == 2 && credits_parsed) || (id_byte[0] == 3 && expected_num_anim <= new_caff->num_anim)){
             caff_free(new_caff);
             *caff = NULL;
             return CAFF_FORMAT_ERROR;
@@ -230,7 +211,7 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
             memcpy(creatorlength_bytes, buffer + bytes_read, CREATORLENGTH_SIZE);
             bytes_read += CREATORLENGTH_SIZE;
             new_caff->creator_length = parse_8byte_integer(creatorlength_bytes);
-            if (new_caff->credits_block_length != (new_caff->creator_length + CREATORLENGTH_SIZE + YEAR_SIZE + 4*MDHM_SIZE)){
+            if (new_caff->credits_block_length != (new_caff->creator_length + CREATORLENGTH_SIZE + YEAR_SIZE + 4*MDHM_SIZE) || new_caff->creator_length > size){
                 caff_free(new_caff);
                 *caff = NULL;
                 return CAFF_FORMAT_ERROR;
@@ -267,7 +248,16 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
             unsigned char blocklength3_bytes[BLOCKLENGTH_SIZE];
             memcpy(blocklength3_bytes, buffer + bytes_read, BLOCKLENGTH_SIZE);
             bytes_read += BLOCKLENGTH_SIZE;
-            new_caff->anim_block_length[ciffs_parsed] = parse_8byte_integer(blocklength3_bytes);
+            unsigned long long *new_anim_block_length = (unsigned long long *) realloc(new_caff->anim_block_length, sizeof(unsigned long long) * (new_caff->num_anim + 1));
+            if(new_anim_block_length == NULL) {
+                caff_free(new_caff);
+                *caff = NULL;
+                return CAFF_MEMORY;
+            }
+            else {
+                new_caff->anim_block_length = new_anim_block_length;
+            }
+            new_caff->anim_block_length[new_caff->num_anim] = parse_8byte_integer(blocklength3_bytes);
 
             //Duration
             if (bytes_read + DURATION_SIZE > size){
@@ -278,10 +268,33 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
             unsigned char duration_bytes[DURATION_SIZE];
             memcpy(duration_bytes, buffer + bytes_read, DURATION_SIZE);
             bytes_read += DURATION_SIZE;
-            new_caff->durations[ciffs_parsed] = parse_8byte_integer(duration_bytes);
+            unsigned long long *new_duration = (unsigned long long *) realloc(new_caff->durations, sizeof(unsigned long long) * (new_caff->num_anim + 1));
+            if(new_duration == NULL) {
+                caff_free(new_caff);
+                *caff = NULL;
+                return CAFF_MEMORY;
+            }
+            else {
+                new_caff->durations = new_duration;
+            }
+            new_caff->durations[new_caff->num_anim] = parse_8byte_integer(duration_bytes);
 
             //CIFF
-            CIFF_RES ciff_result = ciff_parse(buffer + bytes_read, size - bytes_read, &new_caff->ciffs[ciffs_parsed]);
+            CIFF **new_ciffs = (CIFF **) realloc(new_caff->ciffs, sizeof(CIFF *) * (new_caff->num_anim + 1));
+            if(new_ciffs == NULL) {
+                caff_free(new_caff);
+                *caff = NULL;
+                return CAFF_MEMORY;
+            }
+            else {
+                new_caff->ciffs = new_ciffs;
+            }
+            if(new_caff->anim_block_length[new_caff->num_anim] - DURATION_SIZE > size) {
+                caff_free(new_caff);
+                *caff = NULL;
+                return CAFF_FORMAT_ERROR;
+            }
+            CIFF_RES ciff_result = ciff_parse(buffer + bytes_read, new_caff->anim_block_length[new_caff->num_anim] - DURATION_SIZE, &new_caff->ciffs[new_caff->num_anim]);
             switch (ciff_result) {
                 case CIFF_FORMAT_ERROR:
                     caff_free(new_caff);
@@ -299,14 +312,20 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
                     // Do nothing
                     break;
             }
-            bytes_read += (new_caff->ciffs[ciffs_parsed]->header_size + new_caff->ciffs[ciffs_parsed]->content_size);
+            bytes_read += (new_caff->ciffs[new_caff->num_anim]->header_size + new_caff->ciffs[new_caff->num_anim]->content_size);
 
-            ciffs_parsed++;
+            new_caff->num_anim++;
         } else {
             caff_free(new_caff);
             *caff = NULL;
             return CAFF_FORMAT_ERROR;
         }
+    }
+
+    if(bytes_read != size) {
+        caff_free(new_caff);
+        *caff = NULL;
+        return CAFF_FORMAT_ERROR;
     }
 
     *caff = new_caff;
