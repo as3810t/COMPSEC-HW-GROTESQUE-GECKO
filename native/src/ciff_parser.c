@@ -209,6 +209,7 @@ CIFF_RES ciff_parse(const unsigned char *buffer, unsigned long long size, CIFF *
 
         char **new_tags = (char **) realloc(new_ciff->tags, (new_ciff->tag_count + 1) * sizeof(const char *));
         if(new_tags == NULL) {
+            free(tag);
             ciff_free(new_ciff);
             *ciff = NULL;
             return CIFF_MEMORY;
