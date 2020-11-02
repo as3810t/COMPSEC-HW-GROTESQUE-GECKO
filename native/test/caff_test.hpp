@@ -1,7 +1,7 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 extern "C" {
 #include "caff_parser.h"
@@ -51,9 +51,11 @@ private:
         unsigned char *buffer;
         unsigned long long size;
         read_caff(file_name, &buffer, &size);
-        CAFF *caff = caff_parse(buffer, size);
+        CAFF *caff;
+        CAFF_RES result = caff_parse(buffer, size, &caff);
 
         if(expected) {
+            CPPUNIT_ASSERT_EQUAL(CAFF_OK, result);
             CPPUNIT_ASSERT_MESSAGE("Success expected", caff != NULL);
 
             if(caff->ciffs[0]->width > 0 && caff->ciffs[0]->height > 0) {
@@ -70,6 +72,7 @@ private:
             }
         }
         else {
+            CPPUNIT_ASSERT_EQUAL(CAFF_FORMAT_ERROR, result);
             CPPUNIT_ASSERT_MESSAGE("Failure expected", caff == NULL);
         }
         caff_free(caff);

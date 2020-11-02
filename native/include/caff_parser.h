@@ -12,6 +12,13 @@
 #define CREATORLENGTH_SIZE 8
 #define DURATION_SIZE 8
 
+typedef enum {
+    CAFF_OK,
+    CAFF_FORMAT_ERROR,
+    CAFF_SIZE_ERROR,
+    CAFF_MEMORY
+} CAFF_RES;
+
 typedef struct {
     unsigned long long header_block_length;
     unsigned long long credits_block_length;
@@ -34,7 +41,7 @@ typedef struct {
 } CAFF;
 
 void caff_free(CAFF *caff);
-CAFF* caff_parse(const unsigned char *buffer, unsigned long long size);
+CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF **caff);
 void caff_preview(const CAFF *caff, unsigned char **bmp, unsigned long long *file_size);
 
 #endif //NATIVE_CAFF_PARSER_H
