@@ -296,10 +296,9 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
             }
             CIFF_RES ciff_result = ciff_parse(buffer + bytes_read, new_caff->anim_block_length[new_caff->num_anim] - DURATION_SIZE, &new_caff->ciffs[new_caff->num_anim]);
             switch (ciff_result) {
-                case CIFF_FORMAT_ERROR:
-                    caff_free(new_caff);
-                    *caff = NULL;
-                    return CAFF_FORMAT_ERROR;
+                case CIFF_OK:
+                    // Do nothing
+                    break;
                 case CIFF_SIZE_ERROR:
                     caff_free(new_caff);
                     *caff = NULL;
@@ -308,9 +307,7 @@ CAFF_RES caff_parse(const unsigned char *buffer, unsigned long long size, CAFF *
                     caff_free(new_caff);
                     *caff = NULL;
                     return CAFF_MEMORY;
-                case CIFF_OK:
-                    // Do nothing
-                    break;
+                case CIFF_FORMAT_ERROR:
                 default:
                     caff_free(new_caff);
                     *caff = NULL;
