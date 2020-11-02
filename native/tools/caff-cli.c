@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "ciff_parser.h"
+#include "caff_parser.h"
 
-static void read_ciff(const char *file_name, unsigned char **buffer, unsigned long long *size) {
+static void read_caff(const char *file_name, unsigned char **buffer, unsigned long long *size) {
     FILE *fp = fopen(file_name, "rb");
     fseek(fp, 0, SEEK_END);
     *size = ftell(fp);
@@ -40,21 +40,21 @@ int main(int argc, char *argv[]) {
 
     unsigned char *buffer;
     unsigned long long size;
-    CIFF *ciff;
+    CAFF *caff;
 
-    read_ciff(input, &buffer, &size);
-    ciff_parse(buffer, size, &ciff);
+    read_caff(input, &buffer, &size);
+    caff_parse(buffer, size, &caff);
 
-    if(ciff == NULL) {
+    if(caff == NULL) {
         free(buffer);
-        ciff_free(ciff);
-        printf("Invalid ciff format");
+        caff_free(caff);
+        printf("Invalid caff format");
         return 1;
     }
 
     unsigned char *bmpBuffer;
     unsigned long long bmpSize;
-    ciff_to_bmp(ciff, &bmpBuffer, &bmpSize);
+    caff_preview(caff, &bmpBuffer, &bmpSize);
 
     if(output != NULL) {
         bmp_fo_file(bmpBuffer, bmpSize, output);
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     free(buffer);
     free(bmpBuffer);
-    ciff_free(ciff);
+    caff_free(caff);
 
     return 0;
 }
