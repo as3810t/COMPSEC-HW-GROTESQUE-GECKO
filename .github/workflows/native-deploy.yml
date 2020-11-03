@@ -23,15 +23,14 @@ jobs:
       - name: Login to Repository
         uses: docker/login-action@v1 
         with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          username: dkmisu
+          password: ${{ secrets.PORTUS_PW }}
+          registry: registry.stripedpossum.dev
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./docker/native.Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: caff-store/native:latest
+          push: true #${{ github.event_name != 'pull_request' }}
+          tags: gecko/native:latest
