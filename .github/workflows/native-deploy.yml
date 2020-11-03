@@ -32,6 +32,6 @@ jobs:
         with:
           context: .
           file: ./docker/native.Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/386
+          platforms: linux/amd64
           push: true
           tags: caff-store/native:latest
