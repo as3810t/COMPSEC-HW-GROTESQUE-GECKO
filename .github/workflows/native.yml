@@ -17,7 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencis
-      run: sudo apt-get install -y lcov libcppunit-dev build-essential protobuf
+      run: |
+        sudo apt-get install -y lcov libcppunit-dev build-essential
+        sudo snap install protobuf --classic
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
         version: '8'
@@ -40,7 +42,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencis
-      run: sudo apt-get install -y lcov libcppunit-dev build-essential protobuf
+      run: |
+        sudo apt-get install -y lcov libcppunit-dev build-essential protobuf
+        sudo snap install protobuf --classic
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
         version: '8'
