@@ -38,6 +38,18 @@ protobuf {
 
 mainClassName = 'hu.grotesque_gecko.caff_parser.service.CaffParserServer'
 
+jar {
+    manifest {
+        attributes (
+            'Main-Class': 'hu.grotesque_gecko.caff_parser.service.CaffParserServer'
+        )
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
     compile 'io.grpc:grpc-netty:1.4.0'
     compile 'io.grpc:grpc-protobuf:1.4.0'
