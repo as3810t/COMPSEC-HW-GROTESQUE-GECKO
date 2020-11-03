@@ -2,11 +2,11 @@ name: Native CI
 
 on:
   push:
-    paths: 
-      - native/**
+#    paths: 
+#      - native/**
   pull_request:
-    paths: 
-      - native/**
+#    paths: 
+#      - native/**
 
 jobs:
   build:
