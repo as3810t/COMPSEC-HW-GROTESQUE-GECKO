@@ -10,8 +10,6 @@ on:
 jobs:
   push_to_registry:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./native
 
     steps:
       - name: Check out the repo
@@ -33,4 +31,4 @@ jobs:
           context: .
           file: ./docker/native.Dockerfile
           push: true #${{ github.event_name != 'pull_request' }}
-          tags: gecko/native:latest
+          tags: registry.stripedpossum.dev/gecko/native:latest
