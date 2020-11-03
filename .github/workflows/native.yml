@@ -52,7 +52,7 @@ jobs:
       run: make all
       working-directory: ${{env.native-directory}}
     - name: test
-      run: LD_LIBRARY_PATH=${{env.native-directory}}/bin TERM=dumb ./gradlew check
+      run: LD_LIBRARY_PATH=../native/bin TERM=dumb ./gradlew check
       working-directory: ${{env.native-component-directory}}
 
   analyze:
