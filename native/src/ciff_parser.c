@@ -258,7 +258,7 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
         return;
     }
 
-    unsigned char img[3 * ciff->width * ciff->height];
+    unsigned char *img = malloc(3 * ciff->width * ciff->height);
     for(unsigned long long i = 0; i < ciff->width; i++) {
         for(unsigned long long j = 0; j < ciff->height; j++) {
             unsigned long long x = i;
@@ -285,6 +285,8 @@ void ciff_to_bmp(const CIFF *ciff, unsigned char **bmp, unsigned long long *file
             bmp_row[i] = 0;
         }
     }
+
+    free(img);
 
     unsigned char file_header[BMP_FILEHEADER_SIZE] = {
         'B', 'M',       // Signature
