@@ -10,6 +10,8 @@ The component uses CPPUNIT for unit testing and *gcov* for coverage. To install 
 sudo apt install libcppunit-dev lcov
 ```
 
+Moreover, to build the JNI binding, at least JDK 8 must be installed, and the enviromental variable JAVA_HOME set accordingly.
+
 ## Building instructions
 
 To build the project issue the following command from this directory:
@@ -30,6 +32,7 @@ Or if you want to test only certain components:
 
 ```
 make test-ciff
+make test-caff
 ```
 
 ## Coverage
@@ -46,6 +49,7 @@ Or if you want to measure only certain components:
 
 ```
 make clean coverage-ciff
+make clean coverage-caff
 ```
 
 The coverage report will be available in the *report/html* directory.

@@ -1,0 +1,15 @@
+package caff_parser;
+option java_package = "hu.grotesque_gecko.caff_parser.service";
+
+service CaffParser {
+  rpc PreviewCaff (PreviewRequest) returns (PreviewResponse) {}
+}
+
+message PreviewRequest {
+  required bytes caff = 1;
+}
+
+message PreviewResponse {
+  optional bytes bmp = 1;
+  optional string errorMessage = 2;
+}
