@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/blankFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_caffs"
+    tools:keep="@navigation/nav_graph">
 
     <fragment
-        android:id="@+id/blankFragment"
+        android:id="@+id/nav_caffs"
+        android:name="com.example.grotesquegecko.ui.caffsearcher.CaffSearcherFragment"
+        tools:layout="@layout/fragment_caff_searcher" />
+    <fragment
+        android:id="@+id/nav_person"
         android:name="com.example.grotesquegecko.ui.blank.BlankFragment"
-        android:label="BlankFragment" />
+        tools:layout="@layout/fragment_blank" />
 </navigation>
