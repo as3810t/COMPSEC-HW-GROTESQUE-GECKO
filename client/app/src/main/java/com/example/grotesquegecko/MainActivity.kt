@@ -1,18 +1,20 @@
 package com.example.grotesquegecko
 
 import android.os.Bundle
-import co.zsmb.rainbowcake.navigation.SimpleNavActivity
-import com.example.grotesquegecko.ui.blank.BlankFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : SimpleNavActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            navigator.add(BlankFragment())
-        }
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host_fragment)
+        navView.setupWithNavController(navController)
     }
 
 }
