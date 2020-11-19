@@ -1,18 +1,19 @@
 package com.example.grotesquegecko.ui.login
 
 import co.zsmb.rainbowcake.withIOContext
+import com.example.grotesquegecko.domain.interactors.UserInteractor
 import javax.inject.Inject
 
-class LoginPresenter @Inject constructor() {
+class LoginPresenter @Inject constructor(
+    private val userInteractor: UserInteractor
+) {
 
-    suspend fun registerUser(email: String, password: String): Boolean = withIOContext{
-        //TODO get data from user interactor
-        return@withIOContext true
-    }
+    suspend fun registerUser(email: String, username: String, password: String): Boolean = withIOContext {
+            return@withIOContext userInteractor.registerUser(email, username, password)
+        }
 
-    suspend fun logInUser(email: String, password: String): Boolean = withIOContext{
-        //TODO get data from user interactor
-        return@withIOContext true
+    suspend fun logInUser(emailOrUsername: String, password: String): Boolean = withIOContext {
+        return@withIOContext userInteractor.logInUser(emailOrUsername, password)
     }
 
 }
