@@ -45,6 +45,67 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="411dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <RelativeLayout
+        android:id="@+id/caffSearcherRelativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/background_white_border"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caffSearcherToolbar">
+
+        <ImageView
+            android:id="@+id/caffSelectorIcon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_small"
+            android:src="@drawable/icon_pictures"
+            tools:ignore="ContentDescription" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/caffSelectorCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/caffSelectorIcon"
+            app:cardCornerRadius="4dp">
+
+            <EditText
+                android:id="@+id/caffSelectorSearchField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/caffSelectorSearchButton"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@color/blue"
+        android:elevation="10dp"
+        android:src="@drawable/icon_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/caffSearcherToolbar"
+        tools:ignore="ContentDescription" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/caffSearcherAddNewCaffsButton"
         android:layout_width="wrap_content"
