@@ -1,5 +1,6 @@
-package hu.grotesque_gecko.caffstore.models;
+package hu.grotesque_gecko.caffstore.caff.models;
 
+import hu.grotesque_gecko.caffstore.user.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name="comments")
@@ -31,7 +33,7 @@ public class Comment {
     private String content;
 
     @Column(nullable = false)
-    private Date createdDate;
+    private Time createdDate;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CAFF caff;
@@ -40,7 +42,7 @@ public class Comment {
     private User user;
 
     @Column()
-    private Date lastModifiedDate;
+    private Time lastModifiedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User lastModifiedBy;

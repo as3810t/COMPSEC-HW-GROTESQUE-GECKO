@@ -1,5 +1,6 @@
-package hu.grotesque_gecko.caffstore.models;
+package hu.grotesque_gecko.caffstore.caff.models;
 
+import hu.grotesque_gecko.caffstore.user.models.User;
 import hu.grotesque_gecko.caffstore.utils.StringListConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +10,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -37,13 +39,12 @@ public class CAFF {
     @Convert(converter = StringListConverter.class)
     private List<String> tags;
 
-    @NotEmpty
-    @Column(nullable = false)
-    private String caffFileName;
-
-    @NotEmpty
-    @Column(nullable = false)
-    private String caffPreviewFileName;
+    @OneToOne(
+        mappedBy = "caff",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private CAFFFileData fileData;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User owner;
@@ -57,6 +58,7 @@ public class CAFF {
     private List<Comment> comments = new ArrayList<>();
 
     @Column()
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -51,9 +51,9 @@ jar {
 }
 
 dependencies {
-    compile 'io.grpc:grpc-netty:1.4.0'
-    compile 'io.grpc:grpc-protobuf:1.4.0'
-    compile 'io.grpc:grpc-stub:1.4.0'
+    compile 'io.grpc:grpc-netty:1.33.0'
+    compile 'io.grpc:grpc-protobuf:1.33.0'
+    compile 'io.grpc:grpc-stub:1.33.0'
     compile files('../native/bin/caffparser.jar')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

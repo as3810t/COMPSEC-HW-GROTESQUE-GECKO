@@ -1,6 +1,7 @@
-package hu.grotesque_gecko.caffstore.repositories;
+package hu.grotesque_gecko.caffstore.caff.repositories;
 
-import hu.grotesque_gecko.caffstore.models.User;
+import hu.grotesque_gecko.caffstore.user.models.User;
+import hu.grotesque_gecko.caffstore.user.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
