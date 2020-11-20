@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.security;
+package hu.grotesque_gecko.caffstore.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

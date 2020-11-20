@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.0'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id 'com.google.protobuf' version '0.8.13'
 }
 
 group = 'hu.grotesque_gecko'
@@ -18,18 +19,53 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+	main {
+		java {
+			srcDirs 'build/generated/source/proto/main/grpc'
+			srcDirs 'build/generated/source/proto/main/java'
+		}
+	}
+}
+
+protobuf {
+	protoc {
+		artifact = "com.google.protobuf:protoc:3.2.0"
+	}
+	plugins {
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java:1.4.0'
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'javax.validation:validation-api'
-	implementation 'io.jsonwebtoken:jjwt:0.8.0'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'commons-validator:commons-validator:1.4.1'
+	implementation 'javax.validation:validation-api'
+
+	implementation 'io.jsonwebtoken:jjwt:0.8.0'
+
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	compile 'io.grpc:grpc-netty:1.33.0'
+	compile 'io.grpc:grpc-protobuf:1.33.0'
+	compile 'io.grpc:grpc-stub:1.33.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }

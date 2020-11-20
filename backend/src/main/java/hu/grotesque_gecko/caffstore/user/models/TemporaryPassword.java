@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.models;
+package hu.grotesque_gecko.caffstore.user.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

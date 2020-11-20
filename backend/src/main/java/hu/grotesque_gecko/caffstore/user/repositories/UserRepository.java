@@ -1,6 +1,6 @@
-package hu.grotesque_gecko.caffstore.repositories;
+package hu.grotesque_gecko.caffstore.user.repositories;
 
-import hu.grotesque_gecko.caffstore.models.User;
+import hu.grotesque_gecko.caffstore.user.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.security;
+package hu.grotesque_gecko.caffstore.authentication;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

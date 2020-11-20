@@ -1,10 +1,10 @@
-package hu.grotesque_gecko.caffstore.controllers;
+package hu.grotesque_gecko.caffstore.api;
 
-import hu.grotesque_gecko.caffstore.dto.LoginDTO;
-import hu.grotesque_gecko.caffstore.dto.LoginResponse;
-import hu.grotesque_gecko.caffstore.models.User;
-import hu.grotesque_gecko.caffstore.repositories.UserRepository;
-import hu.grotesque_gecko.caffstore.security.JwtTokenProvider;
+import hu.grotesque_gecko.caffstore.api.dto.LoginDTO;
+import hu.grotesque_gecko.caffstore.api.dto.LoginResponse;
+import hu.grotesque_gecko.caffstore.user.models.User;
+import hu.grotesque_gecko.caffstore.user.repositories.UserRepository;
+import hu.grotesque_gecko.caffstore.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

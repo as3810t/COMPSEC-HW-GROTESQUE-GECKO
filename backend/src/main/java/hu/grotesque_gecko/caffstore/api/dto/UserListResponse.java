@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.dto;
+package hu.grotesque_gecko.caffstore.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.dto;
+package hu.grotesque_gecko.caffstore.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,5 @@ import javax.validation.constraints.NotEmpty;
 public class LoginDTO {
     private String username;
     private String email;
-
-    @NotEmpty
     private String password;
 }

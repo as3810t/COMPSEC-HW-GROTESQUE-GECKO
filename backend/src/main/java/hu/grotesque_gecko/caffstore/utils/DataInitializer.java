@@ -1,7 +1,7 @@
 package hu.grotesque_gecko.caffstore.utils;
 
-import hu.grotesque_gecko.caffstore.models.User;
-import hu.grotesque_gecko.caffstore.repositories.UserRepository;
+import hu.grotesque_gecko.caffstore.user.models.User;
+import hu.grotesque_gecko.caffstore.user.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -1,5 +1,7 @@
-package hu.grotesque_gecko.caffstore.models;
+package hu.grotesque_gecko.caffstore.user.models;
 
+import hu.grotesque_gecko.caffstore.caff.models.CAFF;
+import hu.grotesque_gecko.caffstore.caff.models.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,7 +44,7 @@ public class User implements UserDetails {
     private String email;
 
     @NotEmpty
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false)
