@@ -1,6 +1,6 @@
 package com.example.grotesquegecko.data.network
 
-import com.google.gson.JsonElement
+import com.example.grotesquegecko.data.network.models.LoginData
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -14,5 +14,11 @@ interface GrotesqueGeckoAPI {
     @POST("/auth/login")
     fun login(
         @Body body: RequestBody
-    ): Deferred<Response<JsonElement>>
+    ): Deferred<Response<LoginData>>
+
+    @Headers("accept: application/json")
+    @POST("/auth/register")
+    fun register(
+        @Body body: RequestBody
+    ): Deferred<Response<LoginData>>
 }

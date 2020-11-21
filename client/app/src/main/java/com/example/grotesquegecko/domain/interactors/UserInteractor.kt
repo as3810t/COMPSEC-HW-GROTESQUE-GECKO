@@ -7,8 +7,8 @@ class UserInteractor @Inject constructor(
     private val networkDataSource: NetworkDataSource
 ) {
 
-    suspend fun registerUser(email: String, username: String, password: String): Boolean {
-        return networkDataSource.registerUser(email, username, password)
+    suspend fun registerUser(email: String, password: String, username: String): Boolean {
+        return networkDataSource.registerUser(email, password, username)
     }
 
     suspend fun logInUser(email: String, password: String, username: String): Boolean {

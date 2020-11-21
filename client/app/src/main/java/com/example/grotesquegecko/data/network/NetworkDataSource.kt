@@ -11,9 +11,15 @@ class NetworkDataSource @Inject constructor(
     private val grotesqueGeckoAPI: GrotesqueGeckoAPI
 ) {
 
-    suspend fun registerUser(email: String, username: String, password: String): Boolean {
-        //TODO send network request
-        return true
+    suspend fun registerUser(email: String, password: String, username: String): Boolean {
+        //TODO save token
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("password", password)
+            .addFormDataPart("username", username)
+            .build()
+        return grotesqueGeckoAPI.register(requestBody).await().isSuccessful
     }
 
     suspend fun logInUser(email: String, password: String, username: String): Boolean {

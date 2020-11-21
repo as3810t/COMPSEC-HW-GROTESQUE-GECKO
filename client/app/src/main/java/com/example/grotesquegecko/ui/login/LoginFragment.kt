@@ -152,7 +152,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            if (password.length < 4) {
+            if (password.length < 8) {
                 registerEditTextPassword.error =
                     getString(R.string.login_fragment_password_minimum_length)
                 registerEditTextPassword.requestFocus()
@@ -166,7 +166,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            viewModel.registerUser(email, username, password)
+            viewModel.registerUser(email, password, username)
         }
     }
 

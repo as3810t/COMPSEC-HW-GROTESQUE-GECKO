@@ -8,9 +8,9 @@ class LoginViewModel @Inject constructor(
     private val loginPresenter: LoginPresenter
 ) : RainbowCakeViewModel<LoginViewState>(Login) {
 
-    fun registerUser(email: String, username: String, password: String) = execute {
+    fun registerUser(email: String, password: String, username: String) = execute {
         viewState = LoadingRegistration
-        val successful = loginPresenter.registerUser(email, username, password)
+        val successful = loginPresenter.registerUser(email, password, username)
         viewState = if (successful) {
             UserLoaded(successful)
         } else {
