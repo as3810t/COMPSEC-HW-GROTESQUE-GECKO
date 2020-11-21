@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CAFFListResponse {
+public class CAFFListDTO {
     private List<CAFFDTO> caffs;
     private int totalCount;
     private int offset;

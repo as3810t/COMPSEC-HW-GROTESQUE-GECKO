@@ -1,5 +1,8 @@
-package hu.grotesque_gecko.caffstore.authentication;
+package hu.grotesque_gecko.caffstore.authentication.security;
 
+import hu.grotesque_gecko.caffstore.authentication.token.JwtConfigurer;
+import hu.grotesque_gecko.caffstore.authentication.token.JwtTokenProvider;
+import hu.grotesque_gecko.caffstore.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +18,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+        // return super.authenticationManagerBean();
+        return new CAFFStoreAuthenticationManager(userService, passwordEncoder);
     }
 
     @Bean

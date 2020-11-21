@@ -1,4 +1,4 @@
-package hu.grotesque_gecko.caffstore.authentication;
+package hu.grotesque_gecko.caffstore.authentication.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

@@ -1,7 +1,7 @@
 package hu.grotesque_gecko.caffstore.api;
 
 import hu.grotesque_gecko.caffstore.api.dto.UserDTO;
-import hu.grotesque_gecko.caffstore.api.dto.UserListResponse;
+import hu.grotesque_gecko.caffstore.api.dto.UserListDTO;
 import hu.grotesque_gecko.caffstore.user.models.User;
 import hu.grotesque_gecko.caffstore.user.services.UserService;
 import hu.grotesque_gecko.caffstore.utils.Paginated;
@@ -21,14 +21,15 @@ public class UserController {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public @ResponseBody UserListResponse getAll(
+    public @ResponseBody
+    UserListDTO getAll(
         @AuthenticationPrincipal User currentUser,
         @RequestParam(defaultValue = "0") int offset,
         @RequestParam(defaultValue = "100") int pageSize
     ) {
         Paginated<User> users = userService.getAll(currentUser, offset, pageSize);
 
-        return UserListResponse.builder()
+        return UserListDTO.builder()
             .users(users.getEntities().stream().map(this::userToDTO).collect(Collectors.toList()))
             .totalCount((int) users.getTotalCount())
             .offset(offset)

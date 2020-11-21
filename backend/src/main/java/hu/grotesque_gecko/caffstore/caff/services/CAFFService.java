@@ -60,7 +60,7 @@ public class CAFFService {
         PageRequest pageRequest = PageRequest.of(offset, pageSize);
         Page<CAFF> caffs;
         if(!userId.isEmpty()) {
-            User user = userService.internalFetOneById(userId);
+            User user = userService.internalFindOneById(userId);
             if(!title.isEmpty() && !tag.isEmpty()) {
                 caffs = caffRepository.findAllByOwnerAndTitleContainingAndTagsContaining(user, title, tag, pageRequest);
             }

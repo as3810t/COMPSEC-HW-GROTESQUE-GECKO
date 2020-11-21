@@ -1,6 +1,8 @@
 package hu.grotesque_gecko.caffstore.user.services;
 
 import hu.grotesque_gecko.caffstore.authorization.services.AuthorizeService;
+import hu.grotesque_gecko.caffstore.user.models.TemporaryPassword;
+import hu.grotesque_gecko.caffstore.user.repositories.TemporaryPasswordRepository;
 import hu.grotesque_gecko.caffstore.utils.ValidationException;
 import hu.grotesque_gecko.caffstore.user.exceptions.UserAlreadyExistsException;
 import hu.grotesque_gecko.caffstore.user.exceptions.UserDoesNotExistsException;
@@ -11,10 +13,13 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 import static hu.grotesque_gecko.caffstore.utils.Preconditions.*;
@@ -23,6 +28,9 @@ import static hu.grotesque_gecko.caffstore.utils.Preconditions.*;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TemporaryPasswordRepository temporaryPasswordRepository;
 
     @Autowired
     AuthorizeService authorizeService;
@@ -50,13 +58,21 @@ public class UserService {
         return user.get();
     }
 
-    public User internalFetOneById(String id) {
+    public User internalFindOneById(String id) {
         Optional<User> user = userRepository.findById(id);
         if(!user.isPresent()) {
             throw new UserDoesNotExistsException();
         }
 
         return user.get();
+    }
+
+    public Optional<User> internalFindOneByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> internalFindOneByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
@@ -67,7 +83,14 @@ public class UserService {
         String password
     ) {
         authorizeService.canCreateUser(currentUser);
+        return internalCreateOne(username, email, password);
+    }
 
+    public User internalCreateOne(
+        String username,
+        String email,
+        String password
+    ) {
         checkParameter(!username.isEmpty(), ValidationException.class);
         checkParameter(!email.isEmpty(), EmailValidator.getInstance().isValid(email), ValidationException.class);
         checkParameter(password.length() >= 8, ValidationException.class);
@@ -84,6 +107,7 @@ public class UserService {
             .email(email)
             .isAdmin(false)
             .password(encodePassword(password))
+            .credentialValidityDate(new Date())
             .build();
 
         userRepository.save(newUser);
@@ -120,7 +144,9 @@ public class UserService {
             else {
                 authorizeService.canResetPassword(currentUser, user);
                 user.setPassword(null);
+                internalCreateTemporaryPassword(user);
             }
+            user.setCredentialValidityDate(new Date());
         }
 
         userRepository.save(user);
@@ -136,6 +162,30 @@ public class UserService {
         User user = getOneById(currentUser, id);
         authorizeService.canDeleteUser(currentUser, user);
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public void internalCreateTemporaryPassword(User user) {
+        Calendar validUntil = Calendar.getInstance();
+        validUntil.setTime(new Date());
+        validUntil.add(Calendar.HOUR_OF_DAY, 1);
+
+        String rawPassword = KeyGenerators.string().generateKey();
+        System.out.println(rawPassword);
+
+        TemporaryPassword password = TemporaryPassword.builder()
+            .user(user)
+            .password(encodePassword(rawPassword))
+            .validUntil(validUntil.getTime())
+            .build();
+
+        temporaryPasswordRepository.save(password);
+    }
+
+    @Transactional
+    public void internalResetCredentialValidity(User user) {
+        user.setCredentialValidityDate(new Date());
+        userRepository.save(user);
     }
 
     private String encodePassword(String password) {

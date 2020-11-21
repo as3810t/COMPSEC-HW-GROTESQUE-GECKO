@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
@@ -29,6 +31,7 @@ public class DataInitializer implements CommandLineRunner {
             .email("user@localhost")
             .password(this.passwordEncoder.encode("user"))
             .isAdmin(false)
+            .credentialValidityDate(new Date())
             .build()
         );
         this.users.save(User.builder()
@@ -36,6 +39,7 @@ public class DataInitializer implements CommandLineRunner {
             .email("admin@localhost")
             .password(this.passwordEncoder.encode("admin"))
             .isAdmin(true)
+            .credentialValidityDate(new Date())
             .build()
         );
 

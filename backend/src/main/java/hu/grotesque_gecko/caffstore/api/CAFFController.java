@@ -1,9 +1,9 @@
 package hu.grotesque_gecko.caffstore.api;
 
 import hu.grotesque_gecko.caffstore.api.dto.CAFFDTO;
-import hu.grotesque_gecko.caffstore.api.dto.CAFFListResponse;
+import hu.grotesque_gecko.caffstore.api.dto.CAFFListDTO;
 import hu.grotesque_gecko.caffstore.api.dto.CommentDTO;
-import hu.grotesque_gecko.caffstore.api.dto.CommentListResponse;
+import hu.grotesque_gecko.caffstore.api.dto.CommentListDTO;
 import hu.grotesque_gecko.caffstore.caff.models.CAFF;
 import hu.grotesque_gecko.caffstore.caff.models.Comment;
 import hu.grotesque_gecko.caffstore.caff.services.CAFFService;
@@ -38,7 +38,8 @@ public class CAFFController {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public @ResponseBody CAFFListResponse getAll(
+    public @ResponseBody
+    CAFFListDTO getAll(
         @AuthenticationPrincipal User currentUser,
         @RequestParam(defaultValue = "0") int offset,
         @RequestParam(defaultValue = "100") int pageSize,
@@ -55,7 +56,7 @@ public class CAFFController {
             userId
         );
 
-        return CAFFListResponse.builder()
+        return CAFFListDTO.builder()
             .caffs(caffs.getEntities().stream().map(this::caffToDTO).collect(Collectors.toList()))
             .totalCount((int) caffs.getTotalCount())
             .offset(offset)
@@ -171,7 +172,8 @@ public class CAFFController {
 
     @GetMapping(value = "/{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public @ResponseBody CommentListResponse getAllComment(
+    public @ResponseBody
+    CommentListDTO getAllComment(
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
         @RequestParam(defaultValue = "0") int offset,
@@ -180,7 +182,7 @@ public class CAFFController {
         CAFF caff = caffService.getOneById(currentUser, id);
         Paginated<Comment> comments = commentService.getAll(currentUser, caff, offset, pageSize);
 
-        return CommentListResponse.builder()
+        return CommentListDTO.builder()
             .comments(comments.getEntities().stream().map(this::commentToDTO).collect(Collectors.toList()))
             .totalCount((int) comments.getTotalCount())
             .offset(offset)

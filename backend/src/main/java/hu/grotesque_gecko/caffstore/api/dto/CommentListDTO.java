@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentListResponse {
+public class CommentListDTO {
     private List<CommentDTO> comments;
     private int totalCount;
     private int offset;

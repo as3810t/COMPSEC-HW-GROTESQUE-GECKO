@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -43,12 +40,15 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
 
-    @NotEmpty
     @Column
     private String password;
 
     @Column(nullable = false)
     private boolean isAdmin;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date credentialValidityDate;
 
     @OneToMany(
         mappedBy = "owner",

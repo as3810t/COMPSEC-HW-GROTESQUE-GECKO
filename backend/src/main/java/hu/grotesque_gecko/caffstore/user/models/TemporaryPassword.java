@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name="temporary_passwords")
@@ -28,9 +28,10 @@ public class TemporaryPassword {
 
     @NotEmpty
     @Column(nullable = false)
-    private String title;
+    private String password;
 
     @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date validUntil;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

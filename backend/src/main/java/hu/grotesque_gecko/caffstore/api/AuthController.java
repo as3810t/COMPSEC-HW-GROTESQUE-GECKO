@@ -1,63 +1,77 @@
 package hu.grotesque_gecko.caffstore.api;
 
 import hu.grotesque_gecko.caffstore.api.dto.LoginDTO;
-import hu.grotesque_gecko.caffstore.api.dto.LoginResponse;
+import hu.grotesque_gecko.caffstore.authentication.exceptions.AuthInvalidCredentialsException;
+import hu.grotesque_gecko.caffstore.authentication.services.AuthService;
 import hu.grotesque_gecko.caffstore.user.models.User;
-import hu.grotesque_gecko.caffstore.user.repositories.UserRepository;
-import hu.grotesque_gecko.caffstore.authentication.JwtTokenProvider;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    AuthenticationManager authenticationManager;
+    AuthService authService;
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    UserRepository users;
-
-    @PostMapping("/login")
-    public @ResponseBody LoginResponse login(@RequestBody LoginDTO data) {
-        try {
-            if(data.getUsername() != null) {
-                String username = data.getUsername();
-
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-
-                User user = this.users
-                    .findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found"));
-                String token = jwtTokenProvider.createToken(username, user.getRoles());
-
-                return new LoginResponse(username, token, user.getRoles());
-            }
-            else if(data.getEmail() != null) {
-                String email = data.getEmail();
-
-                User user = this.users
-                    .findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Email " + email + "not found"));
-
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), data.getPassword()));
-
-                String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-
-                return new LoginResponse(user.getUsername(), token, user.getRoles());
-            }
-            else {
-                throw new BadCredentialsException("Invalid username/password supplied");
-            }
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password supplied");
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody LoginDTO login(
+        @RequestParam(required = false) String username,
+        @RequestParam(required = false) String email,
+        @RequestParam String password
+    ) {
+        User user;
+        if(username != null) {
+            user = authService.authWithUsernameAndPassword(username, password);
         }
+        else if(email != null) {
+            user = authService.authWithEmailAndPassword(email, password);
+        }
+        else {
+            throw new AuthInvalidCredentialsException();
+        }
+
+        String token = authService.generateToken(user);
+
+        return LoginDTO.builder()
+            .username(user.getUsername())
+            .token(token)
+            .roles(user.getRoles())
+            .build();
+    }
+
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody LoginDTO register(
+        @RequestParam String username,
+        @RequestParam String email,
+        @RequestParam String password
+    ) {
+        User user = authService.register(username, email, password);
+        String token = authService.generateToken(user);
+
+        return LoginDTO.builder()
+            .username(user.getUsername())
+            .token(token)
+            .roles(user.getRoles())
+            .build();
+    }
+
+    @PostMapping(value = "/passwordReset", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void register(
+        @RequestParam(required = false) String username,
+        @RequestParam(required = false) String email
+    ) {
+        authService.resetPassword(username, email);
+    }
+
+    @PostMapping(value = "/logout")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public void logout(
+        @AuthenticationPrincipal User currentUser
+    ) {
+        authService.logout(currentUser);
     }
 }

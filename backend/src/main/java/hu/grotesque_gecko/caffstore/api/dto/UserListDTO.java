@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserListResponse {
+public class UserListDTO {
     private List<UserDTO> users;
     private int totalCount;
     private int offset;
