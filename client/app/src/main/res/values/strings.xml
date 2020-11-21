@@ -25,4 +25,12 @@
     <string name="login_fragment_password_minimum_length">A jelszó minimum 6 karakter!</string>
     <string name="login_fragment_passwords_equality">A két jelszó nem egyezik meg!</string>
     <string name="login_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra a bejelentkezést.</string>
+
+    <!-- Caff Searcher -->
+    <string name="caff_searcher_page_title">Caff kereső</string>
+    <string name="caff_searcher_empty_list_text">CAFF files</string>
+
+    <!-- Caff Details -->
+    <string name="caff_details_page_title">Details</string>
+    <string name="add_new_caff_page_title">New caff</string>
 </resources>

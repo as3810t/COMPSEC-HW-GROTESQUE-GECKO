@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/blankFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_caffs"
+    tools:keep="@navigation/nav_graph">
 
     <fragment
-        android:id="@+id/blankFragment"
+        android:id="@+id/nav_caffs"
+        android:name="com.example.grotesquegecko.ui.caffsearcher.CaffSearcherFragment"
+        tools:layout="@layout/fragment_caff_searcher">
+        <action
+            android:id="@+id/action_nav_caffs_to_nav_caff_details"
+            app:destination="@id/nav_caff_details" />
+        <action
+            android:id="@+id/action_nav_caffs_to_nav_add_new_caff"
+            app:destination="@id/nav_add_new_caff" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_person"
         android:name="com.example.grotesquegecko.ui.blank.BlankFragment"
-        android:label="BlankFragment" />
+        tools:layout="@layout/fragment_blank" />
+    <fragment
+        android:id="@+id/nav_caff_details"
+        android:name="com.example.grotesquegecko.ui.caffdetails.CaffDetailsFragment"
+        tools:layout="@layout/fragment_caff_details">
+        <action
+            android:id="@+id/action_nav_caff_details_to_nav_caffs"
+            app:destination="@id/nav_caffs" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_add_new_caff"
+        android:name="com.example.grotesquegecko.ui.addnewcaff.AddNewCaffFragment"
+        tools:layout="@layout/fragment_add_new_caff">
+        <action
+            android:id="@+id/action_nav_add_new_caff_to_nav_caffs"
+            app:destination="@id/nav_caffs" />
+    </fragment>
 </navigation>
