@@ -1,0 +1,53 @@
+version: '2'
+services:
+  caff-db:
+    image: mysql:8
+    container_name: caff-db
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=caffstore
+      - MYSQL_USER=caffstore
+      - MYSQL_PASSWORD=caffstore
+    networks:
+      - caff-db-network
+
+
+  caff-parser:
+    build:
+      context: .
+      dockerfile: docker/native.Dockerfile
+    container_name: caff-parser
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - caff-parser-network
+
+  caff-store:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: caff-store
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - spring.datasource.url=jdbc:mysql://caff-db:3306/caffstore
+      - spring.datasource.username=caffstore
+      - spring.datasource.password=caffstore
+      - spring.native.address=caff-parser:50051
+    ports:
+      - 8080:8080
+    networks:
+      - caff-parser-network
+      - caff-db-network
+    depends_on:
+      - caff-parser
+      - caff-db
+
+
+networks:
+  caff-parser-network:
+  caff-db-network:
+    
