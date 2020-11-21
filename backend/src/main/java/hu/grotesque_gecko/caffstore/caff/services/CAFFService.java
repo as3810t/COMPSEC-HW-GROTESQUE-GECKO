@@ -7,6 +7,7 @@ import hu.grotesque_gecko.caffstore.authorization.services.AuthorizeService;
 import hu.grotesque_gecko.caffstore.caff.exceptions.CAFFDoesNotExistsException;
 import hu.grotesque_gecko.caffstore.caff.exceptions.CAFFFormatErrorException;
 import hu.grotesque_gecko.caffstore.caff.exceptions.CAFFTemporalErrorException;
+import hu.grotesque_gecko.caffstore.caff.exceptions.CAFFTitleCannotBeEmptyException;
 import hu.grotesque_gecko.caffstore.caff.models.CAFF;
 import hu.grotesque_gecko.caffstore.caff.models.CAFFFileData;
 import hu.grotesque_gecko.caffstore.caff.repositories.CAFFFileRepository;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static hu.grotesque_gecko.caffstore.utils.Preconditions.checkPagination;
+import static hu.grotesque_gecko.caffstore.utils.Preconditions.checkParameter;
 
 @Service
 public class CAFFService {
@@ -99,6 +101,8 @@ public class CAFFService {
     ) {
         authorizeService.canCreateCAFF(currentUser);
 
+        checkParameter(!title.isEmpty(), CAFFTitleCannotBeEmptyException.class);
+
         CAFF newCaff = CAFF.builder()
             .title(title)
             .tags(tags)
@@ -149,6 +153,8 @@ public class CAFFService {
     ) {
         CAFF caff = getOneById(currentUser, id);
         authorizeService.canEditCAFF(currentUser, caff);
+
+        checkParameter(!title.isEmpty(), CAFFTitleCannotBeEmptyException.class);
 
         caff.setTitle(title);
         caff.setTags(tags);

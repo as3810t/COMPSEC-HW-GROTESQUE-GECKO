@@ -1,6 +1,7 @@
 package hu.grotesque_gecko.caffstore.authorization.services;
 
 import hu.grotesque_gecko.caffstore.caff.models.CAFF;
+import hu.grotesque_gecko.caffstore.caff.models.Comment;
 import hu.grotesque_gecko.caffstore.user.models.User;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +60,19 @@ public class AuthorizeService {
 
     public void canDeleteCAFF(User currentUser, CAFF caff) {
         checkPermission(currentUser.isAdmin(), currentUser.getId().equals(caff.getOwner().getId()));
+    }
+
+    public void canGetAllComment(User currentUser, CAFF caff) {
+    }
+
+    public void canMakeComment(User currentUser, CAFF caff) {
+    }
+
+    public void canEditComment(User currentUser, CAFF caff, Comment comment) {
+        checkPermission(currentUser.isAdmin(), currentUser.getId().equals(comment.getUser().getId()));
+    }
+
+    public void canDeleteComment(User currentUser, CAFF caff, Comment comment) {
+        checkPermission(currentUser.isAdmin(), currentUser.getId().equals(comment.getUser().getId()));
     }
 }

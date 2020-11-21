@@ -9,8 +9,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Date;
 import java.sql.Time;
+import java.util.Date;
 
 @Entity
 @Table(name="comments")
@@ -28,23 +28,24 @@ public class Comment {
     @Column(updatable = false, nullable = false)
     private String id;
 
-    @NotEmpty
-    @Column(nullable = false)
+    @Column
     private String content;
 
     @Column(nullable = false)
-    private Time createdDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CAFF caff;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column()
-    private Time lastModifiedDate;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User lastModifiedBy;
 
     @Override
