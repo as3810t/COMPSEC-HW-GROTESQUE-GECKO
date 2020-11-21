@@ -8,7 +8,7 @@ class CaffSearcherViewModel @Inject constructor(
 ) : RainbowCakeViewModel<CaffSearcherViewState>(Loading) {
 
     fun load() = execute {
-        viewState = CaffSearchReady(caffSearcherPresenter.getData())
+        viewState = CaffSearchReady(caffSearcherPresenter.getCaffList())
     }
 
 }
