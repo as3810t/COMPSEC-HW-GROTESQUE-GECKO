@@ -32,4 +32,5 @@
 
     <!-- Caff Details -->
     <string name="caff_details_page_title">Details</string>
+    <string name="add_new_caff_page_title">New caff</string>
 </resources>

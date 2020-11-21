@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_caffs_to_nav_caff_details"
             app:destination="@id/nav_caff_details" />
+        <action
+            android:id="@+id/action_nav_caffs_to_nav_add_new_caff"
+            app:destination="@id/nav_add_new_caff" />
     </fragment>
     <fragment
         android:id="@+id/nav_person"
@@ -24,6 +27,14 @@
         tools:layout="@layout/fragment_caff_details">
         <action
             android:id="@+id/action_nav_caff_details_to_nav_caffs"
+            app:destination="@id/nav_caffs" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_add_new_caff"
+        android:name="com.example.grotesquegecko.ui.addnewcaff.AddNewCaffFragment"
+        tools:layout="@layout/fragment_add_new_caff">
+        <action
+            android:id="@+id/action_nav_add_new_caff_to_nav_caffs"
             app:destination="@id/nav_caffs" />
     </fragment>
 </navigation>

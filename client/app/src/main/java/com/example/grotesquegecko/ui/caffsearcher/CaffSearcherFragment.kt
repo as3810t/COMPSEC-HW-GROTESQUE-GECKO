@@ -26,7 +26,9 @@ class CaffSearcherFragment :
 
     private fun setupButtons() {
         caffSearcherAddNewCaffsButton.setOnClickListener {
-            //TODO add navigation to add new caff file fragment
+            findNavController().navigate(
+                CaffSearcherFragmentDirections.actionNavCaffsToNavAddNewCaff()
+            )
         }
     }
 
