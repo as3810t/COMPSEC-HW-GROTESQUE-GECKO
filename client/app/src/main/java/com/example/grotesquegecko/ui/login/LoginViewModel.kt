@@ -1,5 +1,6 @@
 package com.example.grotesquegecko.ui.login
 
+import android.util.Patterns
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import javax.inject.Inject
 
@@ -19,7 +20,11 @@ class LoginViewModel @Inject constructor(
 
     fun logInUser(emailOrUsername: String, password: String) = execute {
         viewState = LoadingLogin
-        val successful = loginPresenter.logInUser(emailOrUsername, password)
+        val successful = if (Patterns.EMAIL_ADDRESS.matcher(emailOrUsername).matches()) {
+            loginPresenter.logInUser(emailOrUsername, password, "")
+        } else {
+            loginPresenter.logInUser("", password, emailOrUsername)
+        }
         viewState = if (successful) {
             UserLoaded(successful)
         } else {

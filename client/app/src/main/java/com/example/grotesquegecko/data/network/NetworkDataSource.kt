@@ -1,20 +1,30 @@
 package com.example.grotesquegecko.data.network
 
 import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkDataSource @Inject constructor() {
+class NetworkDataSource @Inject constructor(
+    private val grotesqueGeckoAPI: GrotesqueGeckoAPI
+) {
 
     suspend fun registerUser(email: String, username: String, password: String): Boolean {
         //TODO send network request
         return true
     }
 
-    suspend fun logInUser(emailOrUsername: String, password: String): Boolean {
-        //TODO send network request
-        return true
+    suspend fun logInUser(email: String, password: String, username: String): Boolean {
+        //TODO save token
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("password", password)
+            .addFormDataPart("username", username)
+            .build()
+        return grotesqueGeckoAPI.login(requestBody).await().isSuccessful
     }
 
     suspend fun getCaffList(): MutableList<CaffPreview> {

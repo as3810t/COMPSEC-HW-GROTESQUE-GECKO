@@ -11,7 +11,7 @@ class UserInteractor @Inject constructor(
         return networkDataSource.registerUser(email, username, password)
     }
 
-    suspend fun logInUser(emailOrUsername: String, password: String): Boolean {
-        return networkDataSource.logInUser(emailOrUsername, password)
+    suspend fun logInUser(email: String, password: String, username: String): Boolean {
+        return networkDataSource.logInUser(email, password, username)
     }
 }
