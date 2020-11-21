@@ -41,7 +41,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -72,6 +73,7 @@
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/margin_small"
+            android:scaleType="centerCrop"
             android:src="@drawable/icon_pictures"
             tools:ignore="ContentDescription" />
 
@@ -105,6 +107,34 @@
         app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/caffSearcherToolbar"
         tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/caffSearcherEmptyListText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        android:text="@string/caff_searcher_empty_list_text"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/lightGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caffSearcherRelativeLayout" />
+
+    <com.example.grotesquegecko.ui.common.EmptyRecyclerView
+        android:id="@+id/caffSearcherCaffList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caffSearcherRelativeLayout"
+        tools:listitem="@layout/fragment_caff_searcher_list_row" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/caffSearcherAddNewCaffsButton"

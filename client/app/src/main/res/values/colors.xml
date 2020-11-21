@@ -6,6 +6,7 @@
 
     <color name="black">#000000</color>
     <color name="blue">#0E84A0</color>
+    <color name="lightGray">#B3B3B3</color>
     <color name="darkGray">#171717</color>
     <color name="fillInFieldBackground">#4DFFFFFF</color>
     <color name="white">#ffffff</color>

@@ -28,4 +28,5 @@
 
     <!-- Caff Searcher -->
     <string name="caff_searcher_page_title">Caff kereső</string>
+    <string name="caff_searcher_empty_list_text">CAFF files</string>
 </resources>
