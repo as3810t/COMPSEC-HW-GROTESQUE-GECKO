@@ -3,6 +3,7 @@ package com.example.grotesquegecko.di
 import androidx.lifecycle.ViewModel
 import co.zsmb.rainbowcake.dagger.ViewModelKey
 import com.example.grotesquegecko.ui.blank.BlankViewModel
+import com.example.grotesquegecko.ui.caffdetails.CaffDetailsViewModel
 import com.example.grotesquegecko.ui.caffsearcher.CaffSearcherViewModel
 import com.example.grotesquegecko.ui.login.LoginViewModel
 import dagger.Binds
@@ -28,4 +29,8 @@ abstract class ViewModelModule {
     @ViewModelKey(CaffSearcherViewModel::class)
     abstract fun bindCaffSearcherViewModel(caffSearcherViewModel: CaffSearcherViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(CaffDetailsViewModel::class)
+    abstract fun bindCaffDetailsViewModel(caffDetailsViewModel: CaffDetailsViewModel): ViewModel
 }

@@ -2,6 +2,7 @@ package com.example.grotesquegecko.ui.caffsearcher
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.example.grotesquegecko.R
@@ -52,7 +53,9 @@ class CaffSearcherFragment :
     }
 
     override fun onItemSelected(id: String) {
-        //TODO show caff details
         Timber.i("caff details")
+        findNavController().navigate(
+            CaffSearcherFragmentDirections.actionNavCaffsToNavCaffDetails()
+        )
     }
 }
