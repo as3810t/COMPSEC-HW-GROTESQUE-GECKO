@@ -1,6 +1,7 @@
 package hu.grotesque_gecko.caffstore.user.services;
 
 import hu.grotesque_gecko.caffstore.authorization.services.AuthorizeService;
+import hu.grotesque_gecko.caffstore.email.service.EmailService;
 import hu.grotesque_gecko.caffstore.user.models.TemporaryPassword;
 import hu.grotesque_gecko.caffstore.user.repositories.TemporaryPasswordRepository;
 import hu.grotesque_gecko.caffstore.utils.ValidationException;
@@ -37,6 +38,9 @@ public class UserService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailService emailService;
 
     public Paginated<User> getAll(User currentUser, int offset, int pageSize) {
         authorizeService.canListAllUsers(currentUser);
@@ -143,8 +147,8 @@ public class UserService {
             }
             else {
                 authorizeService.canResetPassword(currentUser, user);
+                emailService.sendPasswordResetNotification(user);
                 user.setPassword(null);
-                internalCreateTemporaryPassword(user);
             }
             user.setCredentialValidityDate(new Date());
         }
@@ -171,7 +175,6 @@ public class UserService {
         validUntil.add(Calendar.HOUR_OF_DAY, 1);
 
         String rawPassword = KeyGenerators.string().generateKey();
-        System.out.println(rawPassword);
 
         TemporaryPassword password = TemporaryPassword.builder()
             .user(user)
@@ -180,6 +183,7 @@ public class UserService {
             .build();
 
         temporaryPasswordRepository.save(password);
+        emailService.sendNewTemporaryPassword(user, rawPassword);
     }
 
     @Transactional

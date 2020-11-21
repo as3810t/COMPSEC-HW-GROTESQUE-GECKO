@@ -19,6 +19,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,9 @@ public class CAFFService {
 
     @Autowired
     UserService userService;
+
+    @Value("${spring.native.address:localhost:50051}")
+    String nativeParserAddress;
 
     public Paginated<CAFF> getAll(
         User currentUser,
@@ -196,7 +200,7 @@ public class CAFFService {
 
     private ByteBuffer generatePreview(final ByteBuffer buffer) {
         try {
-            final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:50051")
+            final ManagedChannel channel = ManagedChannelBuilder.forTarget(nativeParserAddress)
                 .usePlaintext()
                 .maxInboundMessageSize(10000000)
                 .build();

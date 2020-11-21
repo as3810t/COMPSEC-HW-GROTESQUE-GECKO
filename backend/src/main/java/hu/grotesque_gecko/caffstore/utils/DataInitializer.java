@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
 
         this.users.save(User.builder()
             .username("user")
-            .email("user@localhost")
+            .email("dkmisu@gmail.com")
             .password(this.passwordEncoder.encode("user"))
             .isAdmin(false)
             .credentialValidityDate(new Date())
