@@ -1,6 +1,8 @@
 package com.example.grotesquegecko.ui.caffsearcher
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.grotesquegecko.R
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_caff_searcher_list_row.view.*
 import timber.log.Timber
@@ -39,11 +41,13 @@ class CaffSearcherAdapter(private val context: Context) :
 
         holder.item = item
 
-        Picasso
-            .with(context)
-            .load(item.imageSource)
-            .placeholder(R.drawable.icon_gecko)
-            .into(holder.caffPreview)
+        Handler(Looper.getMainLooper()).post {
+            Picasso
+                .with(context)
+                .load("https://gecko.stripedpossum.dev/caff/e63d6cbe-dfbb-43e0-bf40-fe6f503694f7/preview")
+                .placeholder(R.drawable.icon_gecko)
+                .into(holder.caffPreview)
+        }
 
         holder.mainTitle.text = item.title
     }

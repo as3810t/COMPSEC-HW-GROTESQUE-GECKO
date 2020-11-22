@@ -1,6 +1,6 @@
 package com.example.grotesquegecko.ui.caffsearcher
 
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.CaffPreview
 
 sealed class CaffSearcherViewState
 

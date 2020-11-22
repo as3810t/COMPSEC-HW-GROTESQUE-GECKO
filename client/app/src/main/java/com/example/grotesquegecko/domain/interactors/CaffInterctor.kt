@@ -1,7 +1,7 @@
 package com.example.grotesquegecko.domain.interactors
 
 import com.example.grotesquegecko.data.network.NetworkDataSource
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.CaffPreview
 import javax.inject.Inject
 
 class CaffInterctor @Inject constructor(

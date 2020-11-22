@@ -1,6 +1,8 @@
 package com.example.grotesquegecko.data.network
 
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.LoginData
+import com.example.grotesquegecko.data.network.token.Token
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -8,44 +10,64 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkDataSource @Inject constructor(
-    private val grotesqueGeckoAPI: GrotesqueGeckoAPI
+    private val grotesqueGeckoAPI: GrotesqueGeckoAPI,
+    private val token: Token
 ) {
 
-    suspend fun registerUser(email: String, password: String, username: String): Boolean {
-        //TODO save token
+    suspend fun registerUser(
+        email: String,
+        password: String,
+        username: String
+    ): retrofit2.Response<LoginData> {
         val requestBody: RequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("email", email)
             .addFormDataPart("password", password)
             .addFormDataPart("username", username)
             .build()
-        return grotesqueGeckoAPI.register(requestBody).await().isSuccessful
+        return grotesqueGeckoAPI.register(requestBody).await()
     }
 
-    suspend fun logInUser(email: String, password: String, username: String): Boolean {
-        //TODO save token
+    suspend fun logInUser(
+        email: String,
+        password: String,
+        username: String
+    ): retrofit2.Response<LoginData> {
         val requestBody: RequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("email", email)
             .addFormDataPart("password", password)
             .addFormDataPart("username", username)
             .build()
-        return grotesqueGeckoAPI.login(requestBody).await().isSuccessful
+        return grotesqueGeckoAPI.login(requestBody).await()
     }
 
     suspend fun getCaffList(): MutableList<CaffPreview> {
-        //TODO send network request
-        return mutableListOf(
-            CaffPreview(
-                "1",
-                "Grotesque",
-                "https://scx2.b-cdn.net/gfx/news/2017/2-5-universityof.jpg"
-            ),
-            CaffPreview(
-                "2",
-                "Gecko",
-                "https://i.insider.com/53bdb318ecad04c707b61b17?width=700&format=jpeg&auto=webp"
-            )
-        )
+        if (!token.hasToken()) {
+            return mutableListOf()
+        }
+
+        val response = grotesqueGeckoAPI.getAllCaffs(
+            auth = token.getToken()!!,
+            offset = null,
+            pageSize = null,
+            tag = "",
+            title = "",
+            userId = ""
+        ).await()
+
+        val caffList = mutableListOf<CaffPreview>()
+
+        if (response.body() != null) {
+            for (caff in response.body()!!.caffs) {
+                caffList.add(
+                    CaffPreview(
+                        caff.id,
+                        caff.title
+                    )
+                )
+            }
+        }
+        return caffList
     }
 }

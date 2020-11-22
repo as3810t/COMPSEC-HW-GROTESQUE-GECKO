@@ -25,14 +25,15 @@
         <ImageView
             android:id="@+id/caffListCaffPreview"
             android:layout_width="@dimen/caff_preview_size"
-            android:layout_height="@dimen/caff_preview_size"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
-            app:layout_constraintStart_toStartOf="parent"
-            android:scaleType="centerInside"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:srcCompat="@drawable/icon_gecko"
+            android:adjustViewBounds="true"
             android:contentDescription="Caff preview"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_gecko"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -42,9 +43,9 @@
             android:layout_marginStart="@dimen/margin_normal"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/caffListCaffPreview"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="CAFF title" />
 
         <ImageView

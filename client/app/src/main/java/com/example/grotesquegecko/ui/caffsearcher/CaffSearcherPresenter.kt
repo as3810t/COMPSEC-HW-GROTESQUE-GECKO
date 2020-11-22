@@ -1,8 +1,8 @@
 package com.example.grotesquegecko.ui.caffsearcher
 
 import co.zsmb.rainbowcake.withIOContext
+import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.domain.interactors.CaffInterctor
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
 import javax.inject.Inject
 
 class CaffSearcherPresenter @Inject constructor(
