@@ -24,4 +24,8 @@ class UserInteractor @Inject constructor(
             true
         } else false
     }
+
+    suspend fun logout(): Boolean {
+        return networkDataSource.logout()
+    }
 }

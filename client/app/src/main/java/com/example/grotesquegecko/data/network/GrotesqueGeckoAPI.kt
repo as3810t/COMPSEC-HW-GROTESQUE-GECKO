@@ -22,6 +22,12 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<LoginData>>
 
     @Headers("accept: application/json")
+    @POST("/auth/logout")
+    fun logout(
+        @Header("Authorization") auth: String
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
     @GET("/caff")
     fun getAllCaffs(
         @Header("Authorization") auth: String,

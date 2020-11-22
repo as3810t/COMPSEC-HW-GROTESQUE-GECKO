@@ -28,6 +28,12 @@
     <string name="login_fragment_test_password">01234567</string>
     <string name="login_fragment_test_email">zsagnes</string>
 
+    <!--Logout-->
+    <string name="logout_title">Kijelentkezés</string>
+    <string name="logout_text">Biztos ki szeretnél lépni?</string>
+    <string name="logout_dialog_ok">Igen</string>
+    <string name="logout_dialog_cancel">Nem</string>
+
     <!-- Caff Searcher -->
     <string name="caff_searcher_page_title">Caff kereső</string>
     <string name="caff_searcher_empty_list_text">CAFF files</string>

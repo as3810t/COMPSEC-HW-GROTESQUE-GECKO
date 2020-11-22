@@ -42,6 +42,14 @@ class NetworkDataSource @Inject constructor(
         return grotesqueGeckoAPI.login(requestBody).await()
     }
 
+    suspend fun logout(): Boolean {
+        return if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.logout(auth = token.getToken()!!).await()
+            token.deleteToken()
+            response.code() == 200
+        } else true
+    }
+
     suspend fun getCaffList(): MutableList<CaffPreview> {
         if (!token.hasToken()) {
             return mutableListOf()
