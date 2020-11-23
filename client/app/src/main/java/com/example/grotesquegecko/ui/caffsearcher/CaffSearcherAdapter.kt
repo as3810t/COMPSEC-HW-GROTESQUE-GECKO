@@ -44,7 +44,7 @@ class CaffSearcherAdapter(private val context: Context) :
         Handler(Looper.getMainLooper()).post {
             Picasso
                 .with(context)
-                .load("https://gecko.stripedpossum.dev/caff/e63d6cbe-dfbb-43e0-bf40-fe6f503694f7/preview")
+                .load("https://gecko.stripedpossum.dev/caff/${item.id}/preview")
                 .placeholder(R.drawable.icon_gecko)
                 .into(holder.caffPreview)
         }
