@@ -138,7 +138,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            if (username.length < 5) {
+            if (username.length < 4) {
                 registerEditTextUsername.error =
                     getString(R.string.login_fragment_username_minimum_length)
                 registerEditTextUsername.requestFocus()
@@ -152,7 +152,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            if (password.length < 6) {
+            if (password.length < 8) {
                 registerEditTextPassword.error =
                     getString(R.string.login_fragment_password_minimum_length)
                 registerEditTextPassword.requestFocus()
@@ -166,7 +166,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            viewModel.registerUser(email, username, password)
+            viewModel.registerUser(email, password, username)
         }
     }
 
@@ -182,7 +182,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            if (emailOrUsername.length < 5) {
+            if (emailOrUsername.length < 4) {
                 logInEditTextEmailOrUserName.error =
                     getString(R.string.login_fragment_username_minimum_length)
                 logInEditTextEmailOrUserName.requestFocus()
@@ -195,7 +195,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
                 return@setOnClickListener
             }
 
-            if (password.length < 6) {
+            if (password.length < 4) {
                 logInEditTextPassword.error =
                     getString(R.string.login_fragment_password_minimum_length)
                 logInEditTextPassword.requestFocus()

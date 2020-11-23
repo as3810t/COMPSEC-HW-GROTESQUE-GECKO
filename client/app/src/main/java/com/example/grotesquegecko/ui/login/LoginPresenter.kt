@@ -8,12 +8,14 @@ class LoginPresenter @Inject constructor(
     private val userInteractor: UserInteractor
 ) {
 
-    suspend fun registerUser(email: String, username: String, password: String): Boolean = withIOContext {
-            return@withIOContext userInteractor.registerUser(email, username, password)
+    suspend fun registerUser(email: String, password: String, username: String): Boolean =
+        withIOContext {
+            return@withIOContext userInteractor.registerUser(email, password, username)
         }
 
-    suspend fun logInUser(emailOrUsername: String, password: String): Boolean = withIOContext {
-        return@withIOContext userInteractor.logInUser(emailOrUsername, password)
-    }
+    suspend fun logInUser(emailOrUsername: String, password: String, username: String): Boolean =
+        withIOContext {
+            return@withIOContext userInteractor.logInUser(emailOrUsername, password, username)
+        }
 
 }

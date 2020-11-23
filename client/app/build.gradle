@@ -32,7 +32,6 @@ android {
 dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
 
     // Navigation Components
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
@@ -60,6 +59,15 @@ dependencies {
 
     //UI
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
+
+    //Networking
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.4'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

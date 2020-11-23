@@ -11,8 +11,6 @@
     <string name="login_fragment_enter_your_email_or_username">Email cím/ felhasználónév</string>
     <string name="login_fragment_password">Jelszó</string>
     <string name="login_fragment_password_again">Jelszó mégegyszer</string>
-    <string name="login_fragment_test_password">0123456</string>
-    <string name="login_fragment_test_email">zs.agi27@gmail.com</string>
     <string name="login_fragment_log_in_button">Bejelentkezés</string>
     <string name="login_fragment_not_registered">Még nem regisztráltál? Itt regisztrálj</string>
     <string name="login_fragment_registered">Már regisztráltál? Bejelentkezés itt</string>
@@ -20,11 +18,21 @@
     <string name="login_fragment_email_required">Az email cím megadása kötelező!</string>
     <string name="login_fragment_enter_valid_email">Valódi email címet adjon meg!</string>
     <string name="login_fragment_username_required">A felhasználónév megadása kötelező!</string>
-    <string name="login_fragment_username_minimum_length">A felhasználónév vagy email cím minimum 5 karakter!</string>
+    <string name="login_fragment_username_minimum_length">A felhasználónév vagy email cím minimum 4 karakter!</string>
     <string name="login_fragment_password_required">A jelszó megadása kötelező!</string>
-    <string name="login_fragment_password_minimum_length">A jelszó minimum 6 karakter!</string>
+    <string name="login_fragment_password_minimum_length">A jelszó minimum 4 karakter!</string>
     <string name="login_fragment_passwords_equality">A két jelszó nem egyezik meg!</string>
     <string name="login_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra a bejelentkezést.</string>
+
+    <!-- Test user -->
+    <string name="login_fragment_test_password">01234567</string>
+    <string name="login_fragment_test_email">zsagnes</string>
+
+    <!--Logout-->
+    <string name="logout_title">Kijelentkezés</string>
+    <string name="logout_text">Biztos ki szeretnél lépni?</string>
+    <string name="logout_dialog_ok">Igen</string>
+    <string name="logout_dialog_cancel">Nem</string>
 
     <!-- Caff Searcher -->
     <string name="caff_searcher_page_title">Caff kereső</string>

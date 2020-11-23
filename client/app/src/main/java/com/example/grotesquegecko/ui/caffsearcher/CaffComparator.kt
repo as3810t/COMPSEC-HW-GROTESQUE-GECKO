@@ -1,7 +1,7 @@
 package com.example.grotesquegecko.ui.caffsearcher
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.grotesquegecko.ui.caffsearcher.models.CaffPreview
+import com.example.grotesquegecko.data.network.models.CaffPreview
 
 object CaffComparator : DiffUtil.ItemCallback<CaffPreview>() {
 
