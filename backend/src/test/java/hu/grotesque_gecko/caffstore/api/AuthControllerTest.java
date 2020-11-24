@@ -13,7 +13,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,27 +22,31 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.util.NestedServletException;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ContextConfiguration
 public class AuthControllerTest {
 
+    //////////////////
+    //End-to-end tests
+    //////////////////////////////////////////////////////////////
+    //The list of requirements are:
+    //Functional requirements:  https://github.com/as3810t/COMPSEC-HW-GROTESQUE-GECKO/wiki/Functional-Requirements-and-Use-Cases
+    //Security requirements:    https://github.com/as3810t/COMPSEC-HW-GROTESQUE-GECKO/wiki/Security-Requirements-and-Objectives
+    //////////////////////////////////////////////////////////////
+
     @Autowired
-    private MockMvc mockMvc;
+    private TestRestTemplate testRestTemplate;
 
     @Mock
-    Principal principal;
-
-    @Mock
-    private AuthService authService;
-
-    @InjectMocks
-    private AuthController authController;
+    private Principal principal;
 
     private User user;
     private final static String badUsername = "Script Kiddie";
@@ -64,10 +69,82 @@ public class AuthControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(authController)
                 .build();
     }
-    
+
+    /*
+    Covers: FU1, FU1.1
+    Implemented by: register
+     */
+    @Test
+    void FU1_1_Test() {
+        //Users must be able to register to the service with a valid email, globally unique username, and a password.
+
+        /*GIVEN
+        - globally unique username
+        - valid email
+        - valid password
+         */
+        Map<String, String> params = new HashMap<>();
+        params.put("username", user.getUsername());
+        params.put("email", user.getEmail());
+        params.put("password", user.getPassword());
+
+        /*WHEN
+        - request is register
+         */
+        ResponseEntity responseEntity = testRestTemplate.postForEntity("/auth/register", null, AuthController.class, params);
+
+        /*THEN
+        - status code is OK
+        TODO: - response LoginDTO is valid
+         */
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    /*
+    Covers: FU2, FU2.1
+    Implemented by: login
+    */
+    @Test
+    void FU2_1_Test() {
+        //Users must be able to login to the service with a valid email or username and the matching password
+
+
+    }
+
+    /*
+    Covers: FU2.2
+    Implemented by: passwordReset
+    */
+    @Test
+    void FU2_2_Test() {
+        //Users must be able to reset their password with their email address
+
+
+    }
+
+    /*
+    Covers: FU5.2
+    Implemented by: passwordReset
+    */
+    @Test
+    void FU5_2_Test() {
+        //Administrators must be able to reset the password of any user with their email address
+
+
+    }
+
     ///////////////
     //Mapping tests
     ///////////////
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Mock
+    private AuthService authService;
+
+    @InjectMocks
+    private AuthController authController;
 
     /* login */
 
@@ -581,20 +658,18 @@ public class AuthControllerTest {
 
     @Test
     public void logout_validToken_mappingTest() throws Exception {
-        /*this.mockMvc.perform(post("/auth/logout")
+        this.mockMvc.perform(post("/auth/logout")
                 .principal(principal)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(new ObjectMapper().writeValueAsString("")))
-                .andExpect(status().isOk());*/
-        assertThat(true).isFalse();
+                .andExpect(status().isOk());
     }
 
     @Test
     public void logout_invalidToken_mappingTest() throws Exception {
-        /*this.mockMvc.perform(post("/auth/logout")
+        this.mockMvc.perform(post("/auth/logout")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(new ObjectMapper().writeValueAsString("")))
-                .andExpect(status().isOk());*/
-        assertThat(true).isFalse();
+                .andExpect(status().is4xxClientError());
     }
 }
