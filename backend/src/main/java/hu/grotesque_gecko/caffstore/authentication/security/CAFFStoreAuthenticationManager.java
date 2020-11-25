@@ -8,7 +8,6 @@ import hu.grotesque_gecko.caffstore.user.services.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class CAFFStoreAuthenticationManager implements AuthenticationManager {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         Object credentials = authentication.getCredentials();
 

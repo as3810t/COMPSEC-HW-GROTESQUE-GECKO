@@ -13,16 +13,12 @@ import java.util.Map;
 @ControllerAdvice
 public class ControllerExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<?> authorizationException(AuthorizationException e) {
-        e.printStackTrace();
-
+    public ResponseEntity<Object> authorizationException(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<?> businessException(BusinessException e) {
-        e.printStackTrace();
-
+    public ResponseEntity<Map<Object, Object>> businessException(BusinessException e) {
         final Map<Object, Object> response = new HashMap<>();
         response.put("errorCode", e.getErrorCode());
         response.put("errorMessage", e.getMessage());
@@ -31,9 +27,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> exception(Exception e) {
-        e.printStackTrace();
-
+    public ResponseEntity<Object> exception(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

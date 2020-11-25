@@ -4,6 +4,8 @@ import hu.grotesque_gecko.caffstore.authorization.exceptions.AuthorizationExcept
 import lombok.SneakyThrows;
 
 public class Preconditions {
+    private Preconditions() {}
+
     public static void checkPermission(boolean ...authorized) {
         for(boolean a : authorized) {
             if(a) {

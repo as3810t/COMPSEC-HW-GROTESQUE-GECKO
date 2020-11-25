@@ -46,12 +46,15 @@ public class AuthorizeService {
     }
 
     public void canGetAllCAFF(User currentUser) {
+        // All users are allowed to do
     }
 
     public void canCreateCAFF(User currentUser) {
+        // All users are allowed to do
     }
 
     public void canViewCAFF(User currentUser, CAFF caff) {
+        // All users are allowed to do
     }
 
     public void canEditCAFF(User currentUser, CAFF caff) {
@@ -63,9 +66,11 @@ public class AuthorizeService {
     }
 
     public void canGetAllComment(User currentUser, CAFF caff) {
+        // All users are allowed to do
     }
 
     public void canMakeComment(User currentUser, CAFF caff) {
+        // All users are allowed to do
     }
 
     public void canEditComment(User currentUser, CAFF caff, Comment comment) {

@@ -5,9 +5,6 @@ import hu.grotesque_gecko.caffstore.user.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface CAFFRepository extends JpaRepository<CAFF, String> {
     Page<CAFF> findAllByTitleContaining(String title, Pageable pageable);
