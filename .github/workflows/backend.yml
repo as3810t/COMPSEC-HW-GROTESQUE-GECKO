@@ -37,4 +37,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_BACKEND_TOKEN }}
         run: ./gradlew build sonarqube --info -x test
-        working-directory: ${{ env.working_directory }}
+        working-directory: ${{ env.working-directory }}
