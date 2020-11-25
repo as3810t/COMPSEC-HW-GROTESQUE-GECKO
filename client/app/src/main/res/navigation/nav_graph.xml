@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_caff_searcher">
         <action
             android:id="@+id/action_nav_caffs_to_nav_caff_details"
-            app:destination="@id/nav_caff_details"></action>
+            app:destination="@id/nav_caff_details" />
         <action
             android:id="@+id/action_nav_caffs_to_nav_add_new_caff"
             app:destination="@id/nav_add_new_caff" />
@@ -28,6 +28,9 @@
         <argument
             android:name="caffId"
             android:defaultValue="caffId" />
+        <argument
+            android:name="caffTitle"
+            android:defaultValue="caffTitle"/>
         <action
             android:id="@+id/action_nav_caff_details_to_nav_caffs"
             app:destination="@id/nav_caffs" />

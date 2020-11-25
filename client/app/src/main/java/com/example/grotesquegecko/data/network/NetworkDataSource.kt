@@ -1,5 +1,6 @@
 package com.example.grotesquegecko.data.network
 
+import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.data.network.models.LoginData
 import com.example.grotesquegecko.data.network.token.Token
@@ -77,5 +78,39 @@ class NetworkDataSource @Inject constructor(
             }
         }
         return caffList
+    }
+
+    suspend fun getCommentList(id: String): MutableList<CaffComment> {
+        if (!token.hasToken()) {
+            return mutableListOf()
+        }
+
+        val response = grotesqueGeckoAPI.getAllComments(
+            auth = token.getToken()!!,
+            id = id,
+            offset = null,
+            pageSize = null
+        ).await()
+
+        val commentList = mutableListOf<CaffComment>()
+
+        if (response.body() != null) {
+            for (comment in response.body()!!.comments) {
+                commentList.add(
+                    CaffComment(
+                        comment.caffId,
+                        comment.content,
+                        comment.createdDate,
+                        comment.id,
+                        comment.lastModifiedById,
+                        comment.lastModifiedByName,
+                        comment.lastModifiedDate,
+                        comment.userId,
+                        comment.userName
+                    )
+                )
+            }
+        }
+        return commentList
     }
 }

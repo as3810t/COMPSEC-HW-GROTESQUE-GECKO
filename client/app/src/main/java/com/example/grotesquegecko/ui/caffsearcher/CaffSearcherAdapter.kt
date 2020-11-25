@@ -22,7 +22,7 @@ class CaffSearcherAdapter(private val context: Context) :
     var listener: Listener? = null
 
     interface Listener {
-        fun onItemSelected(id: String)
+        fun onItemSelected(id: String, title: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -61,7 +61,7 @@ class CaffSearcherAdapter(private val context: Context) :
         init {
             itemView.setOnClickListener {
                 item.let {
-                    it?.id?.let { caffId -> listener?.onItemSelected(caffId) }
+                    it?.id?.let { caffId -> listener?.onItemSelected(caffId, mainTitle.text as String) }
                 }
                 Timber.d("Adapter itemSelected")
             }
