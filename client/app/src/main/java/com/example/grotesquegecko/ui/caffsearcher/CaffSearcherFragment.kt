@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
@@ -88,8 +89,9 @@ class CaffSearcherFragment :
 
     override fun onItemSelected(id: String) {
         Timber.i("caff details")
+        val bundle = bundleOf("caffId" to id)
         findNavController().navigate(
-            CaffSearcherFragmentDirections.actionNavCaffsToNavCaffDetails()
+            R.id.action_nav_caffs_to_nav_caff_details, bundle
         )
     }
 }
