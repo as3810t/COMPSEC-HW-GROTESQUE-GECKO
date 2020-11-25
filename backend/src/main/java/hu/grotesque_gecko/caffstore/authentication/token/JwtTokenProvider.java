@@ -47,15 +47,9 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        User user;
-        if(token.equals("<DEBUG>")) {
-            user = userService.internalFindOneByUsername("admin").get();
-        }
-        else {
-            user = userService.internalFindOneById(getId(token));
-            if(user.getCredentialValidityDate().after(getCredentialValidityDate(token)) || getValidUntil(token).before(new Date())) {
-                throw new AuthExpiredTokenException();
-            }
+        User user = userService.internalFindOneById(getId(token));
+        if(user.getCredentialValidityDate().after(getCredentialValidityDate(token)) || getValidUntil(token).before(new Date())) {
+            throw new AuthExpiredTokenException();
         }
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
@@ -77,8 +71,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }
-        // TODO: return null;
-        return "<DEBUG>";
+        return null;
     }
 
     public boolean validateToken(String token) {
@@ -86,7 +79,6 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            if(token.equals("<DEBUG>")) return true;
             throw new AuthInvalidTokenException();
         }
     }
