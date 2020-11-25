@@ -13,14 +13,24 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     override fun provideViewModel() = getViewModelFromFactory()
     override fun getViewResource() = R.layout.fragment_caff_details
 
+    private lateinit var caffId: String
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initArguments()
+
+        caffDetailsCaffId.text = caffId
 
         caffDetailsBackButton.setOnClickListener {
             findNavController().navigate(
                 CaffDetailsFragmentDirections.actionNavCaffDetailsToNavCaffs()
             )
         }
+    }
+
+    private fun initArguments() {
+        caffId = arguments?.getString("caffId").toString()
     }
 
     override fun onStart() {
