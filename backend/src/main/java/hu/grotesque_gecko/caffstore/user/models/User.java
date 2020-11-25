@@ -76,10 +76,10 @@ public class User implements UserDetails {
 
     public List<String> getRoles() {
         if(isAdmin) {
-            return Collections.singletonList("ADMIN");
+            return Collections.singletonList("ROLE_ADMIN");
         }
         else {
-            return Collections.singletonList("USER");
+            return Collections.singletonList("ROLE_USER");
         }
     }
 

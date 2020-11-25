@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/auth/register").permitAll()
                 .antMatchers("/auth/resetPassword").permitAll()
+                .antMatchers("/actuator/**").hasRole("ADMIN")
                 .antMatchers("/v2/api-docs",
                     "/configuration/ui",
                     "/swagger-resources/**",
