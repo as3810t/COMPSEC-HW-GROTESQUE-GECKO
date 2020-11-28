@@ -113,4 +113,19 @@ class NetworkDataSource @Inject constructor(
         }
         return commentList
     }
+
+    suspend fun createComment(
+            content: String,
+            id: String
+    ): retrofit2.Response<CaffComment> {
+        val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("content", content)
+                .build()
+        return grotesqueGeckoAPI.createComment(
+                auth = "Bearer ${token.getToken()!!}",
+                requestBody,
+                id = id
+        ).await()
+    }
 }

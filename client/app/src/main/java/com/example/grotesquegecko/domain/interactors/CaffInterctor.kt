@@ -14,4 +14,8 @@ class CaffInterctor @Inject constructor(
     suspend fun getCommentList(id: String): MutableList<CaffComment> {
         return networkDataSource.getCommentList(id)
     }
+    suspend fun createComment(content: String, id: String): Boolean {
+        val response = networkDataSource.createComment(content, id)
+        return response.code() == 200 && response.body() != null
+    }
 }

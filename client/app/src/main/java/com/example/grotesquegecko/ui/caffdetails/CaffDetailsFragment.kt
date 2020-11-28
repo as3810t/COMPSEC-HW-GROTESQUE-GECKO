@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
@@ -27,7 +28,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
 
         initArguments()
 
-        caffDetailsEmptyListText.text = caffId
+        caffDetailsEmptyListText.text = "$caffTitle comments"
 
         caffDetailsBackButton.setOnClickListener {
             findNavController().navigate(
@@ -35,6 +36,12 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
             )
         }
 
+        caffDetailsAddNewCommentButton.setOnClickListener {
+            val bundle = bundleOf("caffId" to caffId, "caffTitle" to caffTitle)
+            findNavController().navigate(
+                    R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
+            )
+        }
         setupList()
         Handler(Looper.getMainLooper()).post {
             Picasso

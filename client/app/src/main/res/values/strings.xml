@@ -39,6 +39,12 @@
     <string name="caff_searcher_empty_list_text">CAFF files</string>
 
     <!-- Caff Details -->
-    <string name="caff_details_page_title">Details</string>
+    <string name="caff_details_page_title">Részletek</string>
     <string name="add_new_caff_page_title">New caff</string>
+    <string name="comment">Komment</string>
+    <string name="add_new_comment_page_title">Új Komment</string>
+    <string name="comment_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
+    <string name="comment_fragment_comment_required">Komment megadása kötelező</string>
+    <string name="deleted_comment">Ez a komment törölve lett</string>
+    <string name="write_a_comment">Write a comment...</string>
 </resources>

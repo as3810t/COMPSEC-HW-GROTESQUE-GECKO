@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray"
+    android:paddingBottom="?attr/actionBarSize"
+    tools:context=".ui.caffdetails.CaffDetailsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/caffDetailsToolbar"
@@ -133,4 +136,15 @@
         app:layout_constraintTop_toBottomOf="@+id/caffDetailsCard"
         tools:listitem="@layout/fragment_caff_details_comment" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/caffDetailsAddNewCommentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        app:backgroundTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/blue"
+        app:srcCompat="@drawable/icon_add"
+        tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

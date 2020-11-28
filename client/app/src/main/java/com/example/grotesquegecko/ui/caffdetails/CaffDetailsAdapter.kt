@@ -1,6 +1,7 @@
 package com.example.grotesquegecko.ui.caffdetails
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +38,13 @@ class CaffDetailsAdapter(private val context: Context) :
         holder.item = item
 
         holder.commentUser.text = item.userName
-        holder.commentText.text = item.content
+        if (item.content != null) {
+            holder.commentText.text = item.content
+        } else {
+            holder.commentText.text = context.getString(R.string.deleted_comment)
+            holder.commentText.setTypeface(null, Typeface.ITALIC)
+        }
+
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

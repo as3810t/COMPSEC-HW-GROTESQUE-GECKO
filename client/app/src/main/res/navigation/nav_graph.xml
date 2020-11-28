@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_nav_caff_details_to_nav_caffs"
             app:destination="@id/nav_caffs" />
+        <action
+            android:id="@+id/action_nav_caff_details_to_nav_add_new_comment"
+            app:destination="@id/nav_add_new_comment" />
     </fragment>
     <fragment
         android:id="@+id/nav_add_new_caff"
@@ -42,5 +45,19 @@
         <action
             android:id="@+id/action_nav_add_new_caff_to_nav_caffs"
             app:destination="@id/nav_caffs" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_add_new_comment"
+        android:name="com.example.grotesquegecko.ui.addnewcomment.AddNewCommentFragment"
+        android:label="AddNewCommentFragment" >
+        <argument
+            android:name="caffId"
+            android:defaultValue="caffId" />
+        <argument
+            android:name="caffTitle"
+            android:defaultValue="caffTitle"/>
+        <action
+            android:id="@+id/action_nav_add_new_comment_to_nav_caff_details"
+            app:destination="@id/nav_caff_details" />
     </fragment>
 </navigation>
