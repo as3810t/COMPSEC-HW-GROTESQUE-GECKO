@@ -87,9 +87,9 @@ class CaffSearcherFragment :
         adapter.submitList(viewState.data)
     }
 
-    override fun onItemSelected(id: String) {
+    override fun onItemSelected(id: String, title: String) {
         Timber.i("caff details")
-        val bundle = bundleOf("caffId" to id)
+        val bundle = bundleOf("caffId" to id, "caffTitle" to title)
         findNavController().navigate(
             R.id.action_nav_caffs_to_nav_caff_details, bundle
         )
