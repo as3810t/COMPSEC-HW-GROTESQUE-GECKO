@@ -26,7 +26,7 @@ public class Comment {
     @Column(updatable = false, nullable = false)
     private String id;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
