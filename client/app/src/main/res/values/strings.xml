@@ -32,6 +32,8 @@
     <string name="login_fragment_forgotten_password_dialog_title">New password</string>
     <string name="login_fragment_forgotten_password_dialog_message">Your password will be emailed to you. \nPlease fill the email and username fields.</string>
     <string name="login_fragment_forgotten_password_dialog_send_button">Küldés</string>
+    <string name="login_fragment_forgotten_password_password_reset_was_successful">Password reset was successfully.</string>
+    <string name="login_fragment_forgotten_password_password_reset_was_not_successful">Something went wrong during the password reset. Please try it again.</string>
 
     <!-- Test user -->
     <string name="login_fragment_test_password">01234567</string>
@@ -56,6 +58,4 @@
     <string name="comment_fragment_comment_required">Komment megadása kötelező</string>
     <string name="deleted_comment">Ez a komment törölve lett</string>
     <string name="write_a_comment">Write a comment...</string>
-    <string name="login_fragment_forgotten_password_password_reset_was_successful">Password reset was successfully.</string>
-    <string name="login_fragment_forgotten_password_password_reset_was_not_successful">Something went wrong during the password reset. Please try it again.</string>
 </resources>
