@@ -58,4 +58,13 @@
     <string name="comment_fragment_comment_required">Komment megadása kötelező</string>
     <string name="deleted_comment">Ez a komment törölve lett</string>
     <string name="write_a_comment">Írj valamit…</string>
+    <string name="edit_comment_dialog_send_button">Szerkesztés</string>
+    <string name="edit_comment_dialog_title">Komment szerkesztés</string>
+    <string name="details_fragment_edit_comment_dialog_message">Itt változtathatod meg kommented tartalmát.</string>
+    <string name="details_fragment_edit_your_comment">Komment</string>
+    <string name="add_new_caff_file_path">File path...</string>
+    <string name="add_new_caff_browse">Browse</string>
+    <string name="add_new_caff_caff_title">Title</string>
+    <string name="add_new_caff_caff_tags">Tags</string>
+    <string name="add_new_caff_upload">Upload</string>
 </resources>

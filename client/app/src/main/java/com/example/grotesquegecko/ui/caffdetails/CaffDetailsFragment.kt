@@ -1,14 +1,19 @@
 package com.example.grotesquegecko.ui.caffdetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
+import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
+import com.example.grotesquegecko.LoginActivity
 import com.example.grotesquegecko.R
+import com.example.grotesquegecko.ui.caffsearcher.CaffSearcherViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_caff_details.*
 
@@ -20,6 +25,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
 
     private lateinit var caffId: String
     private lateinit var caffTitle: String
+    private lateinit var userId: String
 
     private lateinit var adapter : CaffDetailsAdapter
 
@@ -42,7 +48,6 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
                     R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
             )
         }
-        setupList()
         Handler(Looper.getMainLooper()).post {
             Picasso
                     .with(context)
@@ -54,10 +59,16 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun setupList() {
-        adapter = CaffDetailsAdapter(requireContext())
+        adapter = CaffDetailsAdapter(requireContext(), userId)
         adapter.listener = this
         caffDetailsCommentList.adapter = adapter
         caffDetailsCommentList.emptyView = caffDetailsEmptyListText
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.getUserId()
     }
 
     private fun initArguments() {
@@ -65,10 +76,19 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
         caffTitle = arguments?.getString("caffTitle").toString()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onEvent(event: OneShotEvent) {
+        when (event) {
+            is CaffDetailsViewModel.WrongToken -> {
+                val intent = Intent(activity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+            }
+            is CaffDetailsViewModel.UserId -> {
+                userId = event.userId
+                viewModel.load(caffId)
 
-        viewModel.load(caffId)
+            }
+        }
     }
 
     override fun render(viewState: CaffDetailsViewState) {
@@ -79,6 +99,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun showCommentList(viewState: CaffDetailsReady) {
+        setupList()
         caffDetailsProgressBar.visibility = View.GONE
         adapter.submitList(viewState.data)
     }
@@ -87,8 +108,12 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
         caffDetailsProgressBar.visibility = View.VISIBLE
     }
 
-    override fun onItemSelected(id: String) {
-        TODO("Not yet implemented")
+    override fun onCommentEdit(id: String, content: String) {
+        viewModel.editComment(caffId, id, content)
+    }
+
+    override fun onCommentDelete(id: String) {
+        viewModel.deleteComment(caffId, id)
     }
 
 }

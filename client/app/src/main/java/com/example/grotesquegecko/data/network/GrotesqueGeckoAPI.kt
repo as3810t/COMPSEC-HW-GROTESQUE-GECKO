@@ -1,9 +1,6 @@
 package com.example.grotesquegecko.data.network
 
-import com.example.grotesquegecko.data.network.models.CaffComment
-import com.example.grotesquegecko.data.network.models.CaffList
-import com.example.grotesquegecko.data.network.models.CommentList
-import com.example.grotesquegecko.data.network.models.LoginData
+import com.example.grotesquegecko.data.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -56,10 +53,33 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<CommentList>>
 
     @Headers("accept: application/json")
+    @GET("/user/me")
+    fun getMe(
+            @Header("Authorization") auth: String
+    ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
     @POST("/caff/{id}/comment")
     fun createComment(
         @Header("Authorization") auth: String,
         @Body body: RequestBody,
         @Path("id") id : String
     ): Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @PUT("/caff/{id}/comment/{commentId}")
+    fun editComment(
+            @Header("Authorization") auth: String,
+            @Path("id") caffId: String,
+            @Path("commentId") commentId: String,
+            @Body body: RequestBody
+    ):Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @DELETE("/caff/{id}/comment/{commentId}")
+    fun deleteComment(
+            @Header("Authorization") auth: String,
+            @Path("id") caffId: String,
+            @Path("commentId") commentId: String
+    ):Deferred<Response<Void>>
 }

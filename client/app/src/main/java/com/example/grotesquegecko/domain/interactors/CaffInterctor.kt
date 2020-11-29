@@ -18,4 +18,14 @@ class CaffInterctor @Inject constructor(
         val response = networkDataSource.createComment(content, id)
         return response.code() == 200 && response.body() != null
     }
+
+    suspend fun editComment(caffId: String, commentId: String, content: String): Boolean {
+        val response = networkDataSource.editComment(caffId, commentId, content)
+        return response.code() == 200 && response.body() != null
+    }
+
+    suspend fun deleteComment(caffId: String, commentId: String): Boolean {
+        val response = networkDataSource.deleteComment(caffId, commentId)
+        return response.code() == 200 && response.body() != null
+    }
 }

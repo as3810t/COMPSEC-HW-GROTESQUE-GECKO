@@ -3,6 +3,7 @@ package com.example.grotesquegecko.data.network
 import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.data.network.models.LoginData
+import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.data.network.token.Token
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -123,6 +124,14 @@ class NetworkDataSource @Inject constructor(
         return commentList
     }
 
+    suspend fun getMe():UserData? {
+        if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.getMe(auth = "Bearer ${token.getToken()!!}").await()
+            return response.body()
+        }
+        return null
+    }
+
     suspend fun createComment(
             content: String,
             id: String
@@ -135,6 +144,34 @@ class NetworkDataSource @Inject constructor(
             auth = "Bearer ${token.getToken()!!}",
             body = requestBody,
             id = id
+        ).await()
+    }
+
+    suspend fun editComment(
+            caffId: String,
+            commentId: String,
+            content: String
+    ): retrofit2.Response<CaffComment> {
+        val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("content", content)
+                .build()
+        return grotesqueGeckoAPI.editComment(
+                auth = "Bearer ${token.getToken()!!}",
+                caffId = caffId,
+                commentId = commentId,
+                body = requestBody
+        ).await()
+    }
+
+    suspend fun deleteComment(
+            caffId: String,
+            commentId: String
+    ): retrofit2.Response<Void> {
+        return grotesqueGeckoAPI.deleteComment(
+                auth = "Bearer ${token.getToken()!!}",
+                caffId = caffId,
+                commentId = commentId
         ).await()
     }
 }

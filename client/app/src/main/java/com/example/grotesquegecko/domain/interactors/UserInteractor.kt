@@ -1,6 +1,7 @@
 package com.example.grotesquegecko.domain.interactors
 
 import com.example.grotesquegecko.data.network.NetworkDataSource
+import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.data.network.token.Token
 import javax.inject.Inject
 
@@ -34,5 +35,9 @@ class UserInteractor @Inject constructor(
             email = email,
             username = username
         )
+    }
+
+    suspend fun getMe(): UserData? {
+        return networkDataSource.getMe()
     }
 }
