@@ -41,9 +41,9 @@ public class UserController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public @ResponseBody UserDTO createOne(
         @AuthenticationPrincipal User currentUser,
-        @RequestParam String username,
-        @RequestParam String email,
-        @RequestParam String password
+        @RequestPart String username,
+        @RequestPart String email,
+        @RequestPart String password
     ) {
         User newUser = userService.createOne(
             currentUser,
@@ -77,16 +77,16 @@ public class UserController {
     public @ResponseBody UserDTO editOne(
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
-        @RequestParam(required = false, defaultValue = "") String username,
-        @RequestParam(required = false, defaultValue = "") String email,
-        @RequestParam(required = false, defaultValue = "") String password
+        @RequestPart(required = false) String username,
+        @RequestPart(required = false) String email,
+        @RequestPart(required = false) String password
     ) {
         User newUser = userService.editOne(
             currentUser,
             id,
-            username,
-            email,
-            password
+            username != null ? username : "",
+            email != null ? email : "",
+            password != null ? password : ""
         );
 
         return userToDTO(newUser);

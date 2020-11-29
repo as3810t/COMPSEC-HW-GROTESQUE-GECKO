@@ -38,8 +38,7 @@ public class CAFFController {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public @ResponseBody
-    CAFFListDTO getAll(
+    public @ResponseBody CAFFListDTO getAll(
         @AuthenticationPrincipal User currentUser,
         @RequestParam(defaultValue = "0") int offset,
         @RequestParam(defaultValue = "100") int pageSize,
@@ -70,13 +69,13 @@ public class CAFFController {
     public @ResponseBody CAFFDTO createOne(
         @AuthenticationPrincipal User currentUser,
         @RequestParam String title,
-        @RequestParam(required = false, defaultValue = "") String tags,
-        @RequestParam MultipartFile file
+        @RequestPart(required = false) String tags,
+        @RequestPart MultipartFile file
     ) {
         CAFF newCaff = caffService.createOne(
             currentUser,
             title,
-            tags.equals("") ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
+            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
             ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(newCaff);
@@ -148,14 +147,14 @@ public class CAFFController {
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
         @RequestParam String title,
-        @RequestParam(required = false, defaultValue = "") String tags,
-        @RequestParam(required = false) MultipartFile file
+        @RequestPart(required = false) String tags,
+        @RequestPart(required = false) MultipartFile file
     ) {
         CAFF caff = caffService.editOne(
             currentUser,
             id,
             title,
-            tags.equals("") ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
+            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
             ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(caff);
@@ -195,7 +194,7 @@ public class CAFFController {
     public @ResponseBody CommentDTO createOneComment(
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
-        @RequestParam String content
+        @RequestPart String content
     ) {
         CAFF caff = caffService.getOneById(currentUser, id);
         Comment newComment = commentService.createOne(
@@ -223,7 +222,7 @@ public class CAFFController {
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
         @PathVariable String commentId,
-        @RequestParam String content
+        @RequestPart String content
     ) {
         CAFF caff = caffService.getOneById(currentUser, id);
         Comment comment = commentService.editOne(
