@@ -59,6 +59,20 @@ class UserInteractor @Inject constructor(
         )
     }
 
+    suspend fun editUserData(
+        email: String,
+        password: String,
+        username: String,
+        id: String
+    ): Boolean {
+        return networkDataSource.editUserData(
+            email = email,
+            password = password,
+            username = username,
+            id = id
+        )
+    }
+
     fun myAccountIsUser(): Boolean {
         if (!userRole.hasUserRole()) {
             return false
@@ -68,5 +82,13 @@ class UserInteractor @Inject constructor(
 
     suspend fun getUserData(): UserData? {
         return networkDataSource.getMe()
+    }
+
+    suspend fun getAllUsers(): MutableList<UserData> {
+        return networkDataSource.getAllUsers()
+    }
+
+    suspend fun deleteUser(userId: String) {
+        networkDataSource.deleteUser(userId)
     }
 }

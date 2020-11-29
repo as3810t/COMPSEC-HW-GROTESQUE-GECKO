@@ -73,4 +73,19 @@ interface GrotesqueGeckoAPI {
     fun getMe(
         @Header("Authorization") auth: String
     ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @GET("/user")
+    fun getAllUsers(
+        @Header("Authorization") auth: String,
+        @Query("offset") offset: Int?,
+        @Query("pageSize") pageSize: Int?
+    ): Deferred<Response<AllUsers>>
+
+    @Headers("accept: application/json")
+    @DELETE("/user/{id}")
+    fun deleteUser(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<UserData>>
 }

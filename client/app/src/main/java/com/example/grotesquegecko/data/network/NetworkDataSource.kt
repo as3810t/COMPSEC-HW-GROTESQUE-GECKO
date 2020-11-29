@@ -162,10 +162,58 @@ class NetworkDataSource @Inject constructor(
         if (token.hasToken() and (me != null)) {
             val response = grotesqueGeckoAPI.editUserData(
                 auth = "Bearer ${token.getToken()!!}",
-                id = getMe()!!.id,
+                id = me!!.id,
                 body = requestBody
             ).await()
             return response.isSuccessful
         } else return false
+    }
+
+    suspend fun editUserData(
+        email: String,
+        password: String,
+        username: String,
+        id: String
+    ): Boolean {
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("password", password)
+            .addFormDataPart("username", username)
+            .build()
+        if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.editUserData(
+                auth = "Bearer ${token.getToken()!!}",
+                id = id,
+                body = requestBody
+            ).await()
+            return response.isSuccessful
+        } else return false
+    }
+
+    suspend fun getAllUsers(): MutableList<UserData> {
+        if (!token.hasToken()) {
+            return mutableListOf()
+        }
+        val response = grotesqueGeckoAPI.getAllUsers(
+            auth = "Bearer ${token.getToken()!!}",
+            offset = null,
+            pageSize = null
+        ).await()
+
+        return if (response.isSuccessful and (response.body() != null)) {
+            response.body()!!.users
+        } else {
+            mutableListOf()
+        }
+    }
+
+    suspend fun deleteUser(userId: String) {
+        if (token.hasToken()) {
+            grotesqueGeckoAPI.deleteUser(
+                auth = "Bearer ${token.getToken()!!}",
+                id = userId
+            ).await()
+        }
     }
 }

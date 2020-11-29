@@ -6,6 +6,7 @@ import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
@@ -165,6 +166,12 @@ class UserDataFragment : RainbowCakeFragment<UserDataViewState, UserDataViewMode
                 userDataAdmin.visibility = View.VISIBLE
                 userDataShowUsersButton.visibility = View.VISIBLE
                 divider3.visibility = View.VISIBLE
+
+                userDataShowUsersButton.setOnClickListener {
+                    findNavController().navigate(
+                        UserDataFragmentDirections.actionNavPersonToAllUsersFragment()
+                    )
+                }
             }
         }
     }

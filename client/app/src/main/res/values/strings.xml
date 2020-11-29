@@ -71,4 +71,7 @@
     <string name="user_data_change_password">Jelszó megváltoztatása</string>
     <string name="user_data_admin">Admin felület</string>
     <string name="user_data_admin_show_all_users">Összes felhasználó</string>
+    <string name="all_users_page_title">Felhasználók</string>
+    <string name="all_users_empty_list_text">Felhasználók</string>
+    <string name="user_data_password_successfully_changed">Jelszó sikeresen megváltoztatva</string>
 </resources>
