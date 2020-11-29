@@ -20,6 +20,7 @@ public class CaffParserServer {
         final int port = 50051;
         server = ServerBuilder.forPort(port)
             .addService(new CaffParserImpl())
+            .maxInboundMessageSize(10000000)
             .build()
             .start();
 
