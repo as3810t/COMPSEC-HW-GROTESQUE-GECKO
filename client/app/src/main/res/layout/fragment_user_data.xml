@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/blankFragmentRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/userDataToolbar"
@@ -45,12 +46,147 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/userDataUsernameName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BlankFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/user_data_username"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/userDataToolbar" />
 
+    <TextView
+        android:id="@+id/userDataUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_large"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/userDataUsernameName"
+        app:layout_constraintTop_toBottomOf="@+id/userDataToolbar"
+        tools:text="username" />
+
+    <ImageButton
+        android:id="@+id/userDataEditUsernameButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@drawable/background_round_button_with_stroke"
+        android:contentDescription="Edit username icon"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_edit"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/userDataUsernameName"
+        app:layout_constraintTop_toTopOf="@id/userDataUsernameName"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="@color/colorPrimary"
+        android:foregroundTint="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/userDataUsernameName"
+        app:layout_constraintEnd_toStartOf="@id/userDataEditUsernameButton"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="20dp" />
+
+    <TextView
+        android:id="@+id/userDataEmailName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/user_data_email"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+    <TextView
+        android:id="@+id/userDataEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/userDataEmailName"
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        tools:text="email" />
+
+    <ImageButton
+        android:id="@+id/userDataEditEmailButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@drawable/background_round_button_with_stroke"
+        android:contentDescription="Edit email icon"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_edit"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/userDataEmailName"
+        app:layout_constraintTop_toTopOf="@id/userDataEmailName"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="@color/colorPrimary"
+        android:foregroundTint="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/userDataEmailName"
+        app:layout_constraintEnd_toStartOf="@id/userDataEditEmailButton"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="20dp" />
+
+    <TextView
+        android:id="@+id/userDataPasswordName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:text="@string/user_data_password"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <ImageButton
+        android:id="@+id/userDataEditPasswordButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@drawable/background_round_button_with_stroke"
+        android:contentDescription="Edit password icon"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_edit"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/userDataPasswordName"
+        app:layout_constraintTop_toTopOf="@id/userDataPasswordName"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

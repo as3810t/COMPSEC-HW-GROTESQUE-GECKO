@@ -61,4 +61,7 @@
 
     <!-- User Data -->
     <string name="user_data_page_title">Felhasználói adatok</string>
+    <string name="user_data_username">Felhasználónév :</string>
+    <string name="user_data_email">Email cím :</string>
+    <string name="user_data_password">Jelszó</string>
 </resources>
