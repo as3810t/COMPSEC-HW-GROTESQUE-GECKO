@@ -50,4 +50,6 @@
     <!-- Caff Details -->
     <string name="caff_details_page_title">Details</string>
     <string name="add_new_caff_page_title">New caff</string>
+    <string name="login_fragment_forgotten_password_password_reset_was_successful">Password reset was successfully.</string>
+    <string name="login_fragment_forgotten_password_password_reset_was_not_successful">Something went wrong during the password reset. Please try it again.</string>
 </resources>

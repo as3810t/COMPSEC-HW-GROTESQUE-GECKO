@@ -18,4 +18,10 @@ class LoginPresenter @Inject constructor(
             return@withIOContext userInteractor.logInUser(emailOrUsername, password, username)
         }
 
+    suspend fun forgottenPassword(email: String, username: String): Boolean = withIOContext {
+        userInteractor.forgottenPassword(
+            email = email,
+            username = username
+        )
+    }
 }

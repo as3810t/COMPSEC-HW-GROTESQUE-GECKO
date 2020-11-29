@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/margin_large"
     android:background="@color/darkGray"
     android:orientation="vertical">
 
@@ -11,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="@dimen/loginFragmentIconSize"
         android:layout_height="@dimen/loginFragmentIconSize"
-        android:layout_margin="40dp"
+        android:layout_margin="@dimen/margin_normal"
         android:contentDescription="Application icon"
         android:src="@drawable/icon_gecko"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,9 +25,9 @@
         android:id="@+id/logInWithEmailOrUsernameContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:background="@color/fillInFieldBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,16 +40,17 @@
             android:hint="@string/login_fragment_enter_your_email_or_username"
             android:inputType="text"
             android:text="@string/login_fragment_test_email"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="Autofill,TextFields" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/logInPasswordContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:background="@color/fillInFieldBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +63,8 @@
             android:hint="@string/login_fragment_password"
             android:inputType="textPassword"
             android:text="@string/login_fragment_test_password"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="Autofill" />
     </LinearLayout>
 
     <TextView
@@ -85,9 +88,9 @@
         android:id="@+id/buttonLogIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_normal"
         android:background="@color/blue"
         android:shadowColor="@color/colorAccent"
         android:text="@string/login_fragment_log_in_button"
@@ -120,7 +123,26 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonLogIn" />
+        app:layout_constraintTop_toBottomOf="@id/textViewSignIn" />
+
+    <LinearLayout
+        android:id="@+id/forgottenPasswordFeedbackContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewForgottenPassword">
+
+        <TextView
+            android:id="@+id/forgottenPasswordFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

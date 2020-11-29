@@ -50,6 +50,15 @@ class NetworkDataSource @Inject constructor(
         } else true
     }
 
+    suspend fun forgottenPassword(email: String, username: String): Boolean {
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("username", username)
+            .build()
+        return grotesqueGeckoAPI.passwordReset(requestBody).await().code() == 200
+    }
+
     suspend fun getCaffList(): MutableList<CaffPreview> {
         if (!token.hasToken()) {
             return mutableListOf()
