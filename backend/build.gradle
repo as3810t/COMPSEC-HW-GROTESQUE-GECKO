@@ -16,7 +16,7 @@ sonarqube {
 		property "sonar.projectKey", "as3810t_COMPSEC-HW-GROTESQUE-GECKO-server"
 		property "sonar.organization", "as3810t"
 		property "sonar.host.url", "https://sonarcloud.io"
-	}
+	} 
 }
 
 configurations {
