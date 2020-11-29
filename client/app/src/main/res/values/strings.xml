@@ -51,11 +51,27 @@
 
     <!-- Caff Details -->
     <string name="caff_details_page_title">Részletek</string>
-    <string name="add_new_caff_page_title">New caff</string>
+    <string name="add_new_caff_page_title">Új caff</string>
     <string name="comment">Komment</string>
     <string name="add_new_comment_page_title">Új Komment</string>
     <string name="comment_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
     <string name="comment_fragment_comment_required">Komment megadása kötelező</string>
     <string name="deleted_comment">Ez a komment törölve lett</string>
     <string name="write_a_comment">Write a comment...</string>
+
+    <!-- User Data -->
+    <string name="user_data_page_title">Felhasználói adatok</string>
+    <string name="user_data_username">Felhasználónév :</string>
+    <string name="user_data_email">Email cím :</string>
+    <string name="user_data_password">Jelszó</string>
+    <string name="user_data_changes_saved">Változtatások elmentve.</string>
+    <string name="user_data_changes_are_not_saved">Sajnos hiba történt és a változtatások nem lettek elmentve, kérlek próbáld újra</string>
+    <string name="user_data_change_username">Felhasználónév megváltoztatása</string>
+    <string name="user_data_change_email">Email cím megváltoztatása</string>
+    <string name="user_data_change_password">Jelszó megváltoztatása</string>
+    <string name="user_data_admin">Admin felület</string>
+    <string name="user_data_admin_show_all_users">Összes felhasználó</string>
+    <string name="all_users_page_title">Felhasználók</string>
+    <string name="all_users_empty_list_text">Felhasználók</string>
+    <string name="user_data_password_successfully_changed">Jelszó sikeresen megváltoztatva</string>
 </resources>

@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.example.grotesquegecko.R
-import com.squareup.picasso.Picasso
+import com.example.grotesquegecko.ui.common.glideLoader
 import kotlinx.android.synthetic.main.fragment_caff_details.*
 
 class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetailsViewModel>(),
-    CaffDetailsAdapter.Listener{
+    CaffDetailsAdapter.Listener {
 
     override fun provideViewModel() = getViewModelFromFactory()
     override fun getViewResource() = R.layout.fragment_caff_details
@@ -21,7 +21,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     private lateinit var caffId: String
     private lateinit var caffTitle: String
 
-    private lateinit var adapter : CaffDetailsAdapter
+    private lateinit var adapter: CaffDetailsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,16 +39,16 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
         caffDetailsAddNewCommentButton.setOnClickListener {
             val bundle = bundleOf("caffId" to caffId, "caffTitle" to caffTitle)
             findNavController().navigate(
-                    R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
+                R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
             )
         }
         setupList()
         Handler(Looper.getMainLooper()).post {
-            Picasso
-                    .with(context)
-                    .load("https://gecko.stripedpossum.dev/caff/${caffId}/preview")
-                    .placeholder(R.drawable.icon_gecko)
-                    .into(caffDetailsCaffPreview)
+            glideLoader(
+                requireContext(),
+                caffDetailsCaffPreview,
+                "https://gecko.stripedpossum.dev/caff/${caffId}/preview"
+            )
         }
         caffListTitle.text = caffTitle
     }

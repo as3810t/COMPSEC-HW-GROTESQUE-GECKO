@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.grotesquegecko.R
 import com.example.grotesquegecko.data.network.models.CaffPreview
-import com.squareup.picasso.Picasso
+import com.example.grotesquegecko.ui.common.glideLoader
 import kotlinx.android.synthetic.main.fragment_caff_searcher_list_row.view.*
 import timber.log.Timber
+
 
 class CaffSearcherAdapter(private val context: Context) :
     ListAdapter<CaffPreview, CaffSearcherAdapter.ViewHolder>(CaffComparator) {
@@ -42,11 +43,11 @@ class CaffSearcherAdapter(private val context: Context) :
         holder.item = item
 
         Handler(Looper.getMainLooper()).post {
-            Picasso
-                .with(context)
-                .load("https://gecko.stripedpossum.dev/caff/${item.id}/preview")
-                .placeholder(R.drawable.icon_gecko)
-                .into(holder.caffPreview)
+            glideLoader(
+                context,
+                holder.caffPreview,
+                "https://gecko.stripedpossum.dev/caff/${item.id}/preview"
+            )
         }
 
         holder.mainTitle.text = item.title
@@ -61,7 +62,12 @@ class CaffSearcherAdapter(private val context: Context) :
         init {
             itemView.setOnClickListener {
                 item.let {
-                    it?.id?.let { caffId -> listener?.onItemSelected(caffId, mainTitle.text as String) }
+                    it?.id?.let { caffId ->
+                        listener?.onItemSelected(
+                            caffId,
+                            mainTitle.text as String
+                        )
+                    }
                 }
                 Timber.d("Adapter itemSelected")
             }
