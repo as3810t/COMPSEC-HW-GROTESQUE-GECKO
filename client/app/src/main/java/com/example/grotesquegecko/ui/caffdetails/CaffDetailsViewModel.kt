@@ -7,8 +7,8 @@ class CaffDetailsViewModel @Inject constructor(
     private val caffDetailsPresenter: CaffDetailsPresenter
 ) : RainbowCakeViewModel<CaffDetailsViewState>(Loading) {
 
-    fun load() = execute {
-        viewState = CaffDetailsReady(caffDetailsPresenter.getData())
+    fun load(id: String) = execute {
+        viewState = CaffDetailsReady(caffDetailsPresenter.getCommentList(id))
     }
 
 }
