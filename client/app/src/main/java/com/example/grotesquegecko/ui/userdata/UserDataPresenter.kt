@@ -1,6 +1,7 @@
 package com.example.grotesquegecko.ui.userdata
 
 import co.zsmb.rainbowcake.withIOContext
+import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.domain.interactors.UserInteractor
 import javax.inject.Inject
 
@@ -8,8 +9,8 @@ class UserDataPresenter @Inject constructor(
     private val userInteractor: UserInteractor
 ) {
 
-    suspend fun getData(): String = withIOContext {
-        ""
+    suspend fun getUserData(): UserData? = withIOContext {
+        return@withIOContext userInteractor.getUserData()
     }
 
     suspend fun logout(): Boolean {
@@ -22,5 +23,9 @@ class UserDataPresenter @Inject constructor(
             password = password,
             username = username
         )
+    }
+
+    fun myAccountIsUser(): Boolean {
+        return userInteractor.myAccountIsUser()
     }
 }

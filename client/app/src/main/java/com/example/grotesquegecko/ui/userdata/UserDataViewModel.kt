@@ -11,9 +11,19 @@ class UserDataViewModel @Inject constructor(
     object Logout : OneShotEvent
     object EditWasSuccessful : OneShotEvent
     object EditWasNotSuccessful : OneShotEvent
+    object UserDataNotLoaded : OneShotEvent
+    data class UserInformation(
+        val username: String,
+        val email: String
+    ) : OneShotEvent
 
     fun load() = execute {
-        viewState = UserDataReady(userDataPresenter.getData())
+        val user = userDataPresenter.getUserData()
+        if (user == null) {
+            postEvent(UserDataNotLoaded)
+        } else {
+            postEvent(UserInformation(user.username, user.email))
+        }
     }
 
     fun logout() = execute {
@@ -33,6 +43,13 @@ class UserDataViewModel @Inject constructor(
         } else {
             postEvent(EditWasNotSuccessful)
         }
+    }
 
+    fun myAccountIsUser() {
+        viewState = if (!userDataPresenter.myAccountIsUser()) {
+            Admin
+        } else {
+            User
+        }
     }
 }

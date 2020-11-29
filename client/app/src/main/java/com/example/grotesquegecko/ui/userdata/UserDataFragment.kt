@@ -143,11 +143,30 @@ class UserDataFragment : RainbowCakeFragment<UserDataViewState, UserDataViewMode
             is UserDataViewModel.EditWasNotSuccessful -> {
                 userDataEditFeedback.text = getString(R.string.user_data_changes_are_not_saved)
             }
+            is UserDataViewModel.UserInformation -> {
+                userDataEmail.text = event.email
+                userDataUsername.text = event.username
+            }
         }
     }
 
     override fun render(viewState: UserDataViewState) {
-        // TODO Render state
+        when (viewState) {
+            is Loading -> {
+                viewModel.myAccountIsUser()
+            }
+            is User -> {
+
+                userDataAdmin.visibility = View.GONE
+                userDataShowUsersButton.visibility = View.GONE
+                divider3.visibility = View.GONE
+            }
+            is Admin -> {
+                userDataAdmin.visibility = View.VISIBLE
+                userDataShowUsersButton.visibility = View.VISIBLE
+                divider3.visibility = View.VISIBLE
+            }
+        }
     }
 
 }

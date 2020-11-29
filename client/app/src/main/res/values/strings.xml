@@ -69,4 +69,6 @@
     <string name="user_data_change_username">Felhasználónév megváltoztatása</string>
     <string name="user_data_change_email">Email cím megváltoztatása</string>
     <string name="user_data_change_password">Jelszó megváltoztatása</string>
+    <string name="user_data_admin">Admin felület</string>
+    <string name="user_data_admin_show_all_users">Összes felhasználó</string>
 </resources>
