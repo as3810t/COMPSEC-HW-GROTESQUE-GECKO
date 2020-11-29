@@ -28,4 +28,11 @@ class UserInteractor @Inject constructor(
     suspend fun logout(): Boolean {
         return networkDataSource.logout()
     }
+
+    suspend fun forgottenPassword(email: String, username: String): Boolean {
+        return networkDataSource.forgottenPassword(
+            email = email,
+            username = username
+        )
+    }
 }

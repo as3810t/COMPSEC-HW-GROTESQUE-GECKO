@@ -1,12 +1,17 @@
 package com.example.grotesquegecko.ui.login
 
 import android.util.Patterns
+import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
     private val loginPresenter: LoginPresenter
 ) : RainbowCakeViewModel<LoginViewState>(Login) {
+
+    data class PasswordResetWasSuccessful(
+        var passwordResetWasSuccessful: Boolean
+    ) : OneShotEvent
 
     fun registerUser(email: String, password: String, username: String) = execute {
         viewState = LoadingRegistration
@@ -32,4 +37,15 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun forgottenPassword(email: String, username: String) = execute {
+        if (loginPresenter.forgottenPassword(
+                email = email,
+                username = username
+            )
+        ) {
+            postEvent(PasswordResetWasSuccessful(true))
+        } else {
+            postEvent(PasswordResetWasSuccessful(false))
+        }
+    }
 }

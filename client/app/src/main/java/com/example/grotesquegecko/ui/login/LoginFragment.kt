@@ -1,11 +1,16 @@
 package com.example.grotesquegecko.ui.login
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.util.Patterns
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import co.zsmb.rainbowcake.extensions.exhaustive
@@ -97,6 +102,62 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
         setupRegisterButton()
         setupSwitchToRegisterButton()
         setupSwitchToLoginButton()
+        setupForgottenPassword()
+    }
+
+    private fun setupForgottenPassword() {
+        textViewForgottenPassword.setOnClickListener {
+            val forgottenPasswordDialog = AlertDialog.Builder(context)
+                .setView(R.layout.fragment_forgotten_password)
+                .show()
+
+            forgottenPasswordDialog.findViewById<ImageView>(R.id.forgottenPasswordDialogCloseButton)
+                .setOnClickListener {
+                    forgottenPasswordDialog.dismiss()
+                }
+
+            forgottenPasswordDialog.findViewById<Button>(R.id.forgottenPasswordDialogSendButton)
+                .setOnClickListener {
+                    val email: String =
+                        forgottenPasswordDialog.findViewById<EditText>(R.id.forgottenPasswordDialogEmail).text.toString()
+                            .trim()
+                    val username: String =
+                        forgottenPasswordDialog.findViewById<EditText>(R.id.forgottenPasswordDialogUsername).text.toString()
+                            .trim()
+
+                    if (email.isEmpty()) {
+                        registerEditTextEmail.error =
+                            getString(R.string.login_fragment_email_required)
+                        registerEditTextEmail.requestFocus()
+                        return@setOnClickListener
+                    }
+
+                    if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        registerEditTextEmail.error =
+                            getString(R.string.login_fragment_enter_valid_email)
+                        registerEditTextEmail.requestFocus()
+                        return@setOnClickListener
+                    }
+
+                    if (username.isEmpty()) {
+                        registerEditTextUsername.error =
+                            getString(R.string.login_fragment_username_required)
+                        registerEditTextUsername.requestFocus()
+                        return@setOnClickListener
+                    }
+
+                    if (username.length < 4) {
+                        registerEditTextUsername.error =
+                            getString(R.string.login_fragment_username_minimum_length)
+                        registerEditTextUsername.requestFocus()
+                        return@setOnClickListener
+                    }
+
+                    viewModel.forgottenPassword(email, username)
+
+                    forgottenPasswordDialog.dismiss()
+                }
+        }
     }
 
     private fun setupSwitchToLoginButton() {
@@ -203,6 +264,18 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
             }
 
             viewModel.logInUser(emailOrUsername, password)
+        }
+    }
+
+    override fun onEvent(event: OneShotEvent) {
+        when (event) {
+            is LoginViewModel.PasswordResetWasSuccessful -> {
+                forgottenPasswordFeedback.text = if (event.passwordResetWasSuccessful) {
+                    getString(R.string.login_fragment_forgotten_password_password_reset_was_successful)
+                } else {
+                    getString(R.string.login_fragment_forgotten_password_password_reset_was_not_successful)
+                }
+            }
         }
     }
 }
