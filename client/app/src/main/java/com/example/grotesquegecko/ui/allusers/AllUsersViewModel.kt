@@ -18,9 +18,11 @@ class AllUsersViewModel @Inject constructor(
             username = username,
             id = id
         )
+        load()
     }
 
     fun deleteUser(userId: String) = execute {
         allUsersPresenter.deleteUser(userId)
+        load()
     }
 }
