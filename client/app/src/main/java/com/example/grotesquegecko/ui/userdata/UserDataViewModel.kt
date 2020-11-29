@@ -9,6 +9,8 @@ class UserDataViewModel @Inject constructor(
 ) : RainbowCakeViewModel<UserDataViewState>(Loading) {
 
     object Logout : OneShotEvent
+    object EditWasSuccessful : OneShotEvent
+    object EditWasNotSuccessful : OneShotEvent
 
     fun load() = execute {
         viewState = UserDataReady(userDataPresenter.getData())
@@ -18,5 +20,19 @@ class UserDataViewModel @Inject constructor(
         if (userDataPresenter.logout()) {
             postEvent(Logout)
         }
+    }
+
+    fun editUserData(email: String, password: String, username: String) = execute {
+        if (userDataPresenter.editUserData(
+                email = email,
+                password = password,
+                username = username
+            )
+        ) {
+            postEvent(EditWasSuccessful)
+        } else {
+            postEvent(EditWasNotSuccessful)
+        }
+
     }
 }

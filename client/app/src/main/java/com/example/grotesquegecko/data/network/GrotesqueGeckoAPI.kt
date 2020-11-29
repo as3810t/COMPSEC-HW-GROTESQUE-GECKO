@@ -1,9 +1,6 @@
 package com.example.grotesquegecko.data.network
 
-import com.example.grotesquegecko.data.network.models.CaffComment
-import com.example.grotesquegecko.data.network.models.CaffList
-import com.example.grotesquegecko.data.network.models.CommentList
-import com.example.grotesquegecko.data.network.models.LoginData
+import com.example.grotesquegecko.data.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -60,6 +57,20 @@ interface GrotesqueGeckoAPI {
     fun createComment(
         @Header("Authorization") auth: String,
         @Body body: RequestBody,
-        @Path("id") id : String
+        @Path("id") id: String
     ): Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @PUT("/user/{id}")
+    fun editUserData(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String,
+        @Body body: RequestBody
+    ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @GET("/user/me")
+    fun getMe(
+        @Header("Authorization") auth: String
+    ): Deferred<Response<UserData>>
 }

@@ -3,6 +3,7 @@ package com.example.grotesquegecko.data.network
 import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.data.network.models.LoginData
+import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.data.network.token.Token
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -128,13 +129,43 @@ class NetworkDataSource @Inject constructor(
             id: String
     ): retrofit2.Response<CaffComment> {
         val requestBody: RequestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("content", content)
-                .build()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("content", content)
+            .build()
         return grotesqueGeckoAPI.createComment(
             auth = "Bearer ${token.getToken()!!}",
             body = requestBody,
             id = id
         ).await()
+    }
+
+    suspend fun getMe(): UserData? {
+        if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.getMe(auth = "Bearer ${token.getToken()!!}").await()
+            return response.body()
+        }
+        return null
+    }
+
+    suspend fun editUserData(
+        email: String,
+        password: String,
+        username: String
+    ): Boolean {
+        val me = getMe()
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("password", password)
+            .addFormDataPart("username", username)
+            .build()
+        if (token.hasToken() and (me != null)) {
+            val response = grotesqueGeckoAPI.editUserData(
+                auth = "Bearer ${token.getToken()!!}",
+                id = getMe()!!.id,
+                body = requestBody
+            ).await()
+            return response.isSuccessful
+        } else return false
     }
 }

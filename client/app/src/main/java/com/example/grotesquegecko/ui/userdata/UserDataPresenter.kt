@@ -15,4 +15,12 @@ class UserDataPresenter @Inject constructor(
     suspend fun logout(): Boolean {
         return userInteractor.logout()
     }
+
+    suspend fun editUserData(email: String, password: String, username: String) = withIOContext {
+        return@withIOContext userInteractor.editUserData(
+            email = email,
+            password = password,
+            username = username
+        )
+    }
 }

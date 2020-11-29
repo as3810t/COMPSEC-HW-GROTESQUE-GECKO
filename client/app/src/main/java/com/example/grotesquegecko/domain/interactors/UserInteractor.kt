@@ -35,4 +35,12 @@ class UserInteractor @Inject constructor(
             username = username
         )
     }
+
+    suspend fun editUserData(email: String, password: String, username: String): Boolean {
+        return networkDataSource.editUserData(
+            email = email,
+            password = password,
+            username = username
+        )
+    }
 }

@@ -189,4 +189,24 @@
         app:layout_constraintTop_toTopOf="@id/userDataPasswordName"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/userDataEditFeedbackContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/userDataEditFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
