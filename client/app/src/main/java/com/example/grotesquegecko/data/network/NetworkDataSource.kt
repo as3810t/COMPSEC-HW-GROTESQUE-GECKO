@@ -45,10 +45,19 @@ class NetworkDataSource @Inject constructor(
 
     suspend fun logout(): Boolean {
         return if (token.hasToken()) {
-            val response = grotesqueGeckoAPI.logout(auth = token.getToken()!!).await()
+            val response = grotesqueGeckoAPI.logout(auth = "Bearer ${token.getToken()!!}").await()
             token.deleteToken()
             response.code() == 200
         } else true
+    }
+
+    suspend fun forgottenPassword(email: String, username: String): Boolean {
+        val requestBody: RequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("username", username)
+            .build()
+        return grotesqueGeckoAPI.passwordReset(requestBody).await().code() == 200
     }
 
     suspend fun getCaffList(): MutableList<CaffPreview> {
@@ -57,7 +66,7 @@ class NetworkDataSource @Inject constructor(
         }
 
         val response = grotesqueGeckoAPI.getAllCaffs(
-            auth = token.getToken()!!,
+            auth = "Bearer ${token.getToken()!!}",
             offset = null,
             pageSize = null,
             tag = "",
@@ -86,7 +95,7 @@ class NetworkDataSource @Inject constructor(
         }
 
         val response = grotesqueGeckoAPI.getAllComments(
-            auth = token.getToken()!!,
+            auth = "Bearer ${token.getToken()!!}",
             id = id,
             offset = null,
             pageSize = null
@@ -123,9 +132,9 @@ class NetworkDataSource @Inject constructor(
                 .addFormDataPart("content", content)
                 .build()
         return grotesqueGeckoAPI.createComment(
-                auth = "Bearer ${token.getToken()!!}",
-                requestBody,
-                id = id
+            auth = "Bearer ${token.getToken()!!}",
+            body = requestBody,
+            id = id
         ).await()
     }
 }

@@ -30,6 +30,12 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<Void>>
 
     @Headers("accept: application/json")
+    @POST("/auth/passwordReset")
+    fun passwordReset(
+        @Body body: RequestBody
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
     @GET("/caff")
     fun getAllCaffs(
         @Header("Authorization") auth: String,

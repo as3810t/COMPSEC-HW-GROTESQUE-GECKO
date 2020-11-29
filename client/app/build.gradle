@@ -60,6 +60,7 @@ dependencies {
     //UI
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
+    implementation 'com.afollestad.material-dialogs:input:3.3.0'
 
     //Networking
     implementation 'com.squareup.retrofit2:retrofit:2.6.4'
