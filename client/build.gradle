@@ -1,0 +1,36 @@
+apply plugin: "org.sonarqube"
+
+buildscript {
+    ext.kotlin_version = '1.4.0'
+    ext.navigation_version = "2.3.1"
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1"
+    }
+}
+
+sonarqube {
+	properties {
+		property "sonar.projectKey", "as3810t_COMPSEC-HW-GROTESQUE-GECKO-client"
+		property "sonar.organization", "as3810t"
+		property "sonar.host.url", "https://sonarcloud.io"
+	}
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="loginFragmentIconSize">150dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_extra_small">4dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+    <dimen name="margin_extra_large">64dp</dimen>
+    <dimen name="next_image_size">36dp</dimen>
+    <dimen name="caff_preview_size">160dp</dimen>
+    <dimen name="progress_bar_size">200dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+</resources>
