@@ -1,5 +1,6 @@
 package com.example.grotesquegecko.ui.login
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.transition.AutoTransition
@@ -97,6 +98,15 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
         setupRegisterButton()
         setupSwitchToRegisterButton()
         setupSwitchToLoginButton()
+        setupForgottenPassword()
+    }
+
+    private fun setupForgottenPassword() {
+        textViewForgottenPassword.setOnClickListener {
+            val forgottenPasswordDialog = AlertDialog.Builder(context)
+                .setView(R.layout.fragment_forgotten_password)
+                .show()
+        }
     }
 
     private fun setupSwitchToLoginButton() {

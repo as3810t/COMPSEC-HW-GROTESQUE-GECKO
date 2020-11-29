@@ -24,6 +24,15 @@
     <string name="login_fragment_passwords_equality">A két jelszó nem egyezik meg!</string>
     <string name="login_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra a bejelentkezést.</string>
 
+    <!-- Forgotten Password -->
+    <string name="login_fragment_forgotten_password">Forgot your password? \nAsk for a new one.</string>
+    <string name="login_fragment_forgotten_password_title">Please add your email and your username</string>
+    <string name="login_fragment_forgotten_password_ok">OK</string>
+    <string name="login_fragment_forgotten_password_cancel">Cancel</string>
+    <string name="login_fragment_forgotten_password_dialog_title">New password</string>
+    <string name="login_fragment_forgotten_password_dialog_message">Your password will be emailed to you. \nPlease fill the email and username fields.</string>
+    <string name="login_fragment_forgotten_password_dialog_send_button">Küldés</string>
+
     <!-- Test user -->
     <string name="login_fragment_test_password">01234567</string>
     <string name="login_fragment_test_email">zsagnes</string>
