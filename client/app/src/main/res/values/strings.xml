@@ -58,4 +58,7 @@
     <string name="comment_fragment_comment_required">Komment megadása kötelező</string>
     <string name="deleted_comment">Ez a komment törölve lett</string>
     <string name="write_a_comment">Write a comment...</string>
+
+    <!-- User Data -->
+    <string name="user_data_page_title">Felhasználói adatok</string>
 </resources>
