@@ -70,6 +70,11 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
+    // Permissions
+    def permission_dispatcher_version = "4.5.0"
+    implementation "org.permissionsdispatcher:permissionsdispatcher:$permission_dispatcher_version"
+    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:$permission_dispatcher_version"
+
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

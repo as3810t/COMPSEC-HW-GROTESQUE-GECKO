@@ -1,5 +1,6 @@
 package com.example.grotesquegecko.data.network
 
+import android.content.Context
 import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.data.network.models.LoginData
@@ -7,13 +8,16 @@ import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.data.network.token.Token
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NetworkDataSource @Inject constructor(
     private val grotesqueGeckoAPI: GrotesqueGeckoAPI,
-    private val token: Token
+    private val token: Token,
+    private val context: Context
 ) {
 
     suspend fun registerUser(
@@ -125,8 +129,8 @@ class NetworkDataSource @Inject constructor(
     }
 
     suspend fun createComment(
-            content: String,
-            id: String
+        content: String,
+        id: String
     ): retrofit2.Response<CaffComment> {
         val requestBody: RequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -214,6 +218,20 @@ class NetworkDataSource @Inject constructor(
                 auth = "Bearer ${token.getToken()!!}",
                 id = userId
             ).await()
+        }
+    }
+
+    suspend fun downloadCaff(id: String): Response<ResponseBody>? {
+        if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.downloadCaff(
+                auth = "Bearer ${token.getToken()!!}",
+                id = id
+            ).await()
+            val inputStream = response.body()?.byteStream()
+
+            return response
+        } else {
+            return null
         }
     }
 }
