@@ -1,12 +1,13 @@
 package com.example.grotesquegecko.data.network
 
-import com.example.grotesquegecko.data.network.models.CaffComment
-import com.example.grotesquegecko.data.network.models.CaffPreview
-import com.example.grotesquegecko.data.network.models.LoginData
-import com.example.grotesquegecko.data.network.models.UserData
+import android.net.Uri
+import android.os.FileUtils
+import com.example.grotesquegecko.data.network.models.*
 import com.example.grotesquegecko.data.network.token.Token
+import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -172,6 +173,24 @@ class NetworkDataSource @Inject constructor(
                 auth = "Bearer ${token.getToken()!!}",
                 caffId = caffId,
                 commentId = commentId
+        ).await()
+    }
+
+    suspend fun createCaff(
+            filePath: String,
+            title: String,
+            tags: String
+    ): retrofit2.Response<Caff> {
+        val file = File(filePath)
+        val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+                .addFormDataPart("tags", tags)
+                .addFormDataPart("title", title)
+                .build()
+        return grotesqueGeckoAPI.createCaff(
+                auth = "Bearer ${token.getToken()!!}",
+                body = requestBody
         ).await()
     }
 }

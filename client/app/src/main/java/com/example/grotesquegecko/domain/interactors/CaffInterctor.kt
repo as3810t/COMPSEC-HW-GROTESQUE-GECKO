@@ -28,4 +28,15 @@ class CaffInterctor @Inject constructor(
         val response = networkDataSource.deleteComment(caffId, commentId)
         return response.code() == 200 && response.body() != null
     }
+
+    suspend fun createCaff(filePath: String, title: String, tags: String): Boolean {
+        var tagList = tags.split(",")
+        var tagOneString = ""
+        for (i in 0 until tagList.size-1){
+            tagOneString = tagOneString + tagList[i] + "|"
+        }
+        tagOneString += tagList[tagList.size - 1]
+        val response = networkDataSource.createCaff(filePath, title, tagOneString)
+        return response.code() == 200 && response.body() != null
+    }
 }

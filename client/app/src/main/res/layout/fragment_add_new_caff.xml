@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/add_new_caff_file_path"
+            android:hint="@string/add_new_caff_file_path"
             tools:ignore="Autofill,LabelFor" />
 
         <Button
@@ -83,7 +83,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/add_new_caff_caff_title"
+        android:hint="@string/add_new_caff_caff_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
@@ -98,7 +98,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/add_new_caff_caff_tags"
+        android:hint="@string/add_new_caff_caff_tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addNewCaffTitleEdit"
@@ -115,4 +115,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addNewCaffTagsEdit" />
+
+    <TextView
+        android:id="@+id/textViewCaffFailed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:shadowColor="@color/colorAccent"
+        android:text="@string/caff_fragment_something_went_wrong"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addNewCaffUploadButton" />
+
+    <ProgressBar
+        android:id="@+id/addNewCaffProgressBar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:indeterminateTint="@color/lightGray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addNewCaffToolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,7 +37,7 @@
 
     <!-- Test user -->
     <string name="login_fragment_test_password">01234567</string>
-    <string name="login_fragment_test_email">zsagnes</string>
+    <string name="login_fragment_test_email">futo</string>
 
     <!--Logout-->
     <string name="logout_title">Kijelentkezés</string>
@@ -65,6 +65,9 @@
     <string name="add_new_caff_file_path">File path...</string>
     <string name="add_new_caff_browse">Browse</string>
     <string name="add_new_caff_caff_title">Title</string>
-    <string name="add_new_caff_caff_tags">Tags</string>
+    <string name="add_new_caff_caff_tags">tag1, tag2...</string>
     <string name="add_new_caff_upload">Upload</string>
+    <string name="add_new_caff_choose_caff_file">Válassz egy CAFF fájlt</string>
+    <string name="add_new_caff_write_title">Add meg egy címet</string>
+    <string name="caff_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
 </resources>

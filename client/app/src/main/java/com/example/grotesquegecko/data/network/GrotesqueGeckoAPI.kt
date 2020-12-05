@@ -2,9 +2,11 @@ package com.example.grotesquegecko.data.network
 
 import com.example.grotesquegecko.data.network.models.*
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
+import java.io.File
 
 interface GrotesqueGeckoAPI {
 
@@ -82,4 +84,12 @@ interface GrotesqueGeckoAPI {
             @Path("id") caffId: String,
             @Path("commentId") commentId: String
     ):Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
+    @Multipart
+    @POST("/caff")
+    fun createCaff(
+            @Header("Authorization") auth: String,
+            @Body body: RequestBody,
+    ): Deferred<Response<Caff>>
 }
