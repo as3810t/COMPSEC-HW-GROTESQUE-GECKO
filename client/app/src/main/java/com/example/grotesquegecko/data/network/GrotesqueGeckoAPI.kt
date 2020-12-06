@@ -3,6 +3,7 @@ package com.example.grotesquegecko.data.network
 import com.example.grotesquegecko.data.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -59,6 +60,13 @@ interface GrotesqueGeckoAPI {
         @Body body: RequestBody,
         @Path("id") id: String
     ): Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/octet-stream")
+    @GET("/caff/{id}/download")
+    fun downloadCaff(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<ResponseBody>>
 
     @Headers("accept: application/json")
     @PUT("/user/{id}")

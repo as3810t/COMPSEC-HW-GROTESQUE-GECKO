@@ -1,5 +1,6 @@
 package com.example.grotesquegecko.data.network
 
+import android.content.Context
 import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.CaffPreview
 import com.example.grotesquegecko.data.network.models.LoginData
@@ -13,6 +14,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -221,6 +224,20 @@ class NetworkDataSource @Inject constructor(
                 auth = "Bearer ${token.getToken()!!}",
                 id = userId
             ).await()
+        }
+    }
+
+    suspend fun downloadCaff(id: String): Response<ResponseBody>? {
+        if (token.hasToken()) {
+            val response = grotesqueGeckoAPI.downloadCaff(
+                auth = "Bearer ${token.getToken()!!}",
+                id = id
+            ).await()
+            val inputStream = response.body()?.byteStream()
+
+            return response
+        } else {
+            return null
         }
     }
 

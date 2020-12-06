@@ -5,6 +5,8 @@ import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.domain.interactors.CaffInterctor
 import com.example.grotesquegecko.domain.interactors.UserInteractor
+import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 
 class CaffDetailsPresenter @Inject constructor(
@@ -16,6 +18,9 @@ class CaffDetailsPresenter @Inject constructor(
         caffInterctor.getCommentList(id)
     }
 
+    suspend fun downloadCaff(id: String): Response<ResponseBody>? = withIOContext {
+        return@withIOContext caffInterctor.downloadCaff(id)
+    }
     suspend fun getMe(): UserData? = withIOContext {
         userInteractor.getUserData()
     }

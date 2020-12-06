@@ -62,6 +62,12 @@
     <string name="edit_comment_dialog_title">Komment szerkesztés</string>
     <string name="details_fragment_edit_comment_dialog_message">Itt változtathatod meg kommented tartalmát.</string>
     <string name="details_fragment_edit_your_comment">Komment</string>
+    <string name="caff_details_comments_empty_list_text">Kommentek</string>
+    <string name="caff_details_download_is_in_progress">A letöltés folyamatban...</string>
+    <string name="caff_details_download_was_not_successful">A letöltés sikertelen volt.</string>
+    <string name="caff_details_download_is_successful">A letöltés befejeződött.</string>
+    <string name="caff_details_permission_show_rational">A letöltéshez meg kell adnod az engedélyt a fájlok eléréséhez.</string>
+    <string name="caff_details_permission_denied">Fájlok elérése megtagadva.</string>
 
     <!-- User Data -->
     <string name="user_data_page_title">Felhasználói adatok</string>
@@ -90,5 +96,4 @@
     <string name="add_new_caff_choose_caff_file">Válassz egy CAFF fájlt</string>
     <string name="add_new_caff_write_title">Add meg egy címet</string>
     <string name="caff_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
-    <string name="caff_details_comments_empty_list_text">Kommentek</string>
 </resources>
