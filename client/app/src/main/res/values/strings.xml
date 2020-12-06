@@ -36,8 +36,8 @@
     <string name="login_fragment_forgotten_password_password_reset_was_not_successful">Something went wrong during the password reset. Please try it again.</string>
 
     <!-- Test user -->
-    <string name="login_fragment_test_password">01234567</string>
-    <string name="login_fragment_test_email">zsagnes</string>
+    <string name="login_fragment_test_password">11111111</string>
+    <string name="login_fragment_test_email">sophie</string>
 
     <!--Logout-->
     <string name="logout_title">Kijelentkezés</string>
@@ -74,4 +74,9 @@
     <string name="all_users_page_title">Felhasználók</string>
     <string name="all_users_empty_list_text">Felhasználók</string>
     <string name="user_data_password_successfully_changed">Jelszó sikeresen megváltoztatva</string>
+    <string name="caff_details_download_is_in_progress">A letöltés folyamatban...</string>
+    <string name="caff_details_download_was_not_successful">A letöltés sikertelen volt.</string>
+    <string name="caff_details_download_is_successful">A letöltés befejeződött.</string>
+    <string name="caff_details_permission_show_rational">A letöltéshez meg kell adnod az engedélyt a fájlok eléréséhez.</string>
+    <string name="caff_details_permission_denied">Fájlok elérése megtagadva.</string>
 </resources>
