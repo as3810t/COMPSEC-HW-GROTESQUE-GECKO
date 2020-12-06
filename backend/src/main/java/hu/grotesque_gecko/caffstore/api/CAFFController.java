@@ -68,7 +68,7 @@ public class CAFFController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public @ResponseBody CAFFDTO createOne(
         @AuthenticationPrincipal User currentUser,
-        @RequestParam String title,
+        @RequestPart String title,
         @RequestPart(required = false) String tags,
         @RequestPart MultipartFile file
     ) {
@@ -146,7 +146,7 @@ public class CAFFController {
     public @ResponseBody CAFFDTO editOne(
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
-        @RequestParam String title,
+        @RequestPart String title,
         @RequestPart(required = false) String tags,
         @RequestPart(required = false) MultipartFile file
     ) {
