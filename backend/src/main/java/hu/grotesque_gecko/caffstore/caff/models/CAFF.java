@@ -35,8 +35,7 @@ public class CAFF {
     private String title;
 
     @Column
-    @Convert(converter = StringListConverter.class)
-    private List<String> tags;
+    private String tags;
 
     @OneToOne(
         mappedBy = "caff",

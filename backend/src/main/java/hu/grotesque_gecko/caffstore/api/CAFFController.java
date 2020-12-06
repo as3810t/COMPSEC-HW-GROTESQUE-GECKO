@@ -249,7 +249,7 @@ public class CAFFController {
         return CAFFDTO.builder()
             .id(caff.getId())
             .title(caff.getTitle())
-            .tags(caff.getTags())
+            .tags(Arrays.asList(caff.getTags().split(";")))
             .ownerId(caff.getOwner().getId())
             .ownerName(caff.getOwner().getUsername())
             .lastModifiedById(caff.getLastModifiedBy().getId())
