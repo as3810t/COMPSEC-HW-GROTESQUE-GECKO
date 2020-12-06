@@ -7,6 +7,6 @@ data class Caff(
     val lastModifiedDate: String,
     val ownerId: String,
     val ownerName: String,
-    val tags: List<String>,
+    val tags: MutableList<String>,
     val title: String
 )

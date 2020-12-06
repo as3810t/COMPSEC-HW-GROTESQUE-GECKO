@@ -43,6 +43,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white"
                 tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/caffDetailsDeleteCaffButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/icon_delete"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -77,23 +89,95 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="Caff preview"
                 android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/icon_gecko"
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/caffListTitle"
+                android:id="@+id/caffDetailsCaffTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_small"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/caffDetailsCaffPreview"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/caffDetailsCaffPreview"
                 tools:text="CAFF title" />
+
+            <TextView
+                android:id="@+id/caffDetailsTags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:visibility="visible"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/caffDetailsCaffTitle"
+                app:layout_constraintTop_toBottomOf="@+id/caffDetailsCaffTitle"
+                app:layout_constraintEnd_toStartOf="@id/caffDetailsDownloadButton"
+                tools:text="tags" />
+
+            <TextView
+                android:id="@+id/caffDetailsSomethingWentWrong"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/caffDetailsDownloadButton"
+                app:layout_constraintStart_toStartOf="@id/caffDetailsCaffTitle"
+                app:layout_constraintTop_toBottomOf="@+id/caffDetailsTags"
+                tools:text="@string/caff_details_something_went_wrong_during_loading_caffs_datas" />
+
+            <TextView
+                android:id="@+id/caffDetailsDownloading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/caffDetailsCaffTitle"
+                app:layout_constraintTop_toBottomOf="@+id/caffDetailsSomethingWentWrong"
+                tools:text="@string/caff_details_download_is_in_progress" />
+
+            <ImageButton
+                android:id="@+id/caffDetailsEditCaffDatasButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/background_round_button_with_stroke"
+                android:contentDescription="Edit username icon"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_edit"
+                android:tint="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@id/caffDetailsCaffTitle"
+                app:layout_constraintEnd_toEndOf="@id/caffDetailsDownloadButton"
+                app:layout_constraintStart_toStartOf="@id/caffDetailsDownloadButton"
+                app:layout_constraintTop_toTopOf="@id/caffDetailsCaffTitle"
+                tools:ignore="HardcodedText" />
+
+            <ImageButton
+                android:id="@+id/caffDetailsDownloadButton"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_small"
+                android:background="@drawable/background_round_button_with_stroke"
+                android:contentDescription="Download icon"
+                android:padding="@dimen/padding_normal"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_download"
+                android:tint="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/caffDetailsEditCaffDatasButton"
+                tools:ignore="HardcodedText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

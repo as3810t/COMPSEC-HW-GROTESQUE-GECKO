@@ -3,6 +3,7 @@ package com.example.grotesquegecko.data.network
 import com.example.grotesquegecko.data.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -44,6 +45,20 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<CaffList>>
 
     @Headers("accept: application/json")
+    @GET("/caff/{id}")
+    fun getCaffById(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<Caff>>
+
+    @Headers("accept: application/json")
+    @DELETE("/caff/{id}")
+    fun deleteCaff(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
     @GET("/caff/{id}/comment")
     fun getAllComments(
         @Header("Authorization") auth: String,
@@ -59,6 +74,13 @@ interface GrotesqueGeckoAPI {
         @Body body: RequestBody,
         @Path("id") id: String
     ): Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/octet-stream")
+    @GET("/caff/{id}/download")
+    fun downloadCaff(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<ResponseBody>>
 
     @Headers("accept: application/json")
     @PUT("/user/{id}")
@@ -88,4 +110,36 @@ interface GrotesqueGeckoAPI {
         @Header("Authorization") auth: String,
         @Path("id") id: String
     ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @PUT("/caff/{id}/comment/{commentId}")
+    fun editComment(
+            @Header("Authorization") auth: String,
+            @Path("id") caffId: String,
+            @Path("commentId") commentId: String,
+            @Body body: RequestBody
+    ):Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @DELETE("/caff/{id}/comment/{commentId}")
+    fun deleteComment(
+        @Header("Authorization") auth: String,
+        @Path("id") caffId: String,
+        @Path("commentId") commentId: String
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
+    @POST("/caff")
+    fun createCaff(
+        @Header("Authorization") auth: String,
+        @Body body: RequestBody
+    ): Deferred<Response<Caff>>
+
+    @Headers("accept: application/json")
+    @PUT("/caff/{id}")
+    fun editCaffDatas(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String,
+        @Body body: RequestBody
+    ): Deferred<Response<Caff>>
 }

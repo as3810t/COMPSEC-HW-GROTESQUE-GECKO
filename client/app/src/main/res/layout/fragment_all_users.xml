@@ -85,16 +85,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allUsersToolbar"
         tools:listitem="@layout/fragment_all_users_row" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/allUsersAddNewUserButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
-        app:backgroundTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/blue"
-        app:srcCompat="@drawable/icon_add"
-        tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>
