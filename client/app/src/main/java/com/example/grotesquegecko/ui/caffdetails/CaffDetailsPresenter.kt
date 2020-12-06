@@ -33,4 +33,7 @@ class CaffDetailsPresenter @Inject constructor(
         caffInterctor.deleteComment(caffId, commentId)
     }
 
+    fun myAccountIsUser(): Boolean {
+        return userInteractor.myAccountIsUser()
+    }
 }

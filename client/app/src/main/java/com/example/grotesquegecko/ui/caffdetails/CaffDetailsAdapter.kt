@@ -17,8 +17,12 @@ import com.example.grotesquegecko.data.network.models.CaffComment
 import kotlinx.android.synthetic.main.fragment_caff_details_comment.view.*
 import timber.log.Timber
 
-class CaffDetailsAdapter(private val context: Context, private val userId: String) :
-    ListAdapter<CaffComment, CaffDetailsAdapter.ViewHolder>(CommentComparator){
+class CaffDetailsAdapter(
+    private val context: Context,
+    private val userId: String,
+    private val userHasUserRole: Boolean
+) :
+    ListAdapter<CaffComment, CaffDetailsAdapter.ViewHolder>(CommentComparator) {
 
     var listener: Listener? = null
 
@@ -27,7 +31,10 @@ class CaffDetailsAdapter(private val context: Context, private val userId: Strin
         fun onCommentDelete(id: String)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaffDetailsAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CaffDetailsAdapter.ViewHolder {
         val view = LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -44,53 +51,66 @@ class CaffDetailsAdapter(private val context: Context, private val userId: Strin
         holder.item = item
 
         holder.commentUser.text = item.userName
+
         if (item.content != null) {
             holder.commentText.text = item.content
         } else {
             holder.commentText.text = context.getString(R.string.deleted_comment)
             holder.commentText.setTypeface(null, Typeface.ITALIC)
         }
-        if (item.userId != userId || item.content == null){
+
+        if (userHasUserRole && (item.userId != userId || item.content == null)) {
             holder.commentDelete.visibility = View.GONE
             holder.commentEdit.visibility = View.GONE
         } else {
-            holder.commentDelete.visibility = View.VISIBLE
-            holder.commentEdit.visibility = View.VISIBLE
-            holder.commentEdit.setOnClickListener {
-                val editCommentDialog = AlertDialog.Builder(context)
+            if (item.content != null) {
+                holder.commentDelete.visibility = View.VISIBLE
+                holder.commentEdit.visibility = View.VISIBLE
+                holder.commentEdit.setOnClickListener {
+                    val editCommentDialog = AlertDialog.Builder(context)
                         .setView(R.layout.fragment_edit_comment)
                         .show()
-                editCommentDialog.findViewById<EditText>(R.id.editCommentDialogContent)
+                    editCommentDialog.findViewById<EditText>(R.id.editCommentDialogContent)
                         .setText(item.content, TextView.BufferType.EDITABLE)
-                editCommentDialog.findViewById<ImageView>(R.id.editCommentDialogCloseButton)
+                    editCommentDialog.findViewById<ImageView>(R.id.editCommentDialogCloseButton)
                         .setOnClickListener {
                             editCommentDialog.dismiss()
                         }
-                editCommentDialog.findViewById<Button>(R.id.editCommentDialogSendButton)
+                    editCommentDialog.findViewById<Button>(R.id.editCommentDialogSendButton)
                         .setOnClickListener {
-                            val commentField: EditText = editCommentDialog.findViewById(R.id.editCommentDialogContent)
+                            val commentField: EditText =
+                                editCommentDialog.findViewById(R.id.editCommentDialogContent)
                             val comment: String = commentField.text.toString().trim()
 
                             if (comment.isEmpty()) {
-                                commentField.error = 
-                                        context.getString(R.string.comment_fragment_comment_required)
+                                commentField.error =
+                                    context.getString(R.string.comment_fragment_comment_required)
                                 commentField.requestFocus()
                                 return@setOnClickListener
                             }
                             item.let {
-                                it?.id?.let { commentId -> listener?.onCommentEdit(commentId, content = commentField.text.toString()) }
+                                it?.id?.let { commentId ->
+                                    listener?.onCommentEdit(
+                                        commentId,
+                                        content = commentField.text.toString()
+                                    )
+                                }
                             }
                             Timber.d("Adapter itemSelected")
 
                             editCommentDialog.dismiss()
                         }
 
-            }
-            holder.commentDelete.setOnClickListener {
-                item.let {
-                    it?.id?.let { commentId -> listener?.onCommentDelete(commentId) }
                 }
-                Timber.d("Adapter itemSelected")
+                holder.commentDelete.setOnClickListener {
+                    item.let {
+                        it?.id?.let { commentId -> listener?.onCommentDelete(commentId) }
+                    }
+                    Timber.d("Adapter itemSelected")
+                }
+            } else {
+                holder.commentDelete.visibility = View.GONE
+                holder.commentEdit.visibility = View.GONE
             }
         }
     }

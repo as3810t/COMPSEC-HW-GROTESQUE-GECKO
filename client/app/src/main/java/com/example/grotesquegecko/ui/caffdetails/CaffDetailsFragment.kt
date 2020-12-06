@@ -5,14 +5,11 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
-import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.FileProvider
@@ -153,7 +150,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun setupList() {
-        adapter = CaffDetailsAdapter(requireContext(), userId)
+        adapter = CaffDetailsAdapter(requireContext(), userId, viewModel.myAccountIsUser())
         adapter.listener = this
         caffDetailsCommentList.adapter = adapter
         caffDetailsCommentList.emptyView = caffDetailsEmptyListText

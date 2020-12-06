@@ -4,7 +4,6 @@ import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import okhttp3.ResponseBody
 import retrofit2.Response
-import com.example.grotesquegecko.data.network.models.UserData
 import javax.inject.Inject
 
 class CaffDetailsViewModel @Inject constructor(
@@ -51,5 +50,9 @@ class CaffDetailsViewModel @Inject constructor(
     fun deleteComment(caffId: String, commentId: String) = execute {
         caffDetailsPresenter.deleteComment(caffId, commentId)
         load(caffId)
+    }
+
+    fun myAccountIsUser(): Boolean {
+        return caffDetailsPresenter.myAccountIsUser()
     }
 }
