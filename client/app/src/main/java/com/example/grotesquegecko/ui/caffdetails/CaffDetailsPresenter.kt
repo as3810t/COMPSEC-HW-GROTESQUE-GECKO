@@ -17,7 +17,7 @@ class CaffDetailsPresenter @Inject constructor(
     }
 
     suspend fun getMe(): UserData? = withIOContext {
-        userInteractor.getMe()
+        userInteractor.getUserData()
     }
 
     suspend fun editComment(caffId: String, commentId: String, content: String) = withIOContext {

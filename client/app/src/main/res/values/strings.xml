@@ -90,4 +90,5 @@
     <string name="add_new_caff_choose_caff_file">Válassz egy CAFF fájlt</string>
     <string name="add_new_caff_write_title">Add meg egy címet</string>
     <string name="caff_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
+    <string name="caff_details_comments_empty_list_text">Kommentek</string>
 </resources>

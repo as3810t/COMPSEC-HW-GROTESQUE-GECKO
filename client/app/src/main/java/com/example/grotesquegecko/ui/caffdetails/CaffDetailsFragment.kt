@@ -6,14 +6,12 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.example.grotesquegecko.LoginActivity
 import com.example.grotesquegecko.R
-import com.example.grotesquegecko.ui.caffsearcher.CaffSearcherViewModel
 import com.example.grotesquegecko.ui.common.glideLoader
 import kotlinx.android.synthetic.main.fragment_caff_details.*
 
@@ -34,7 +32,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
 
         initArguments()
 
-        caffDetailsEmptyListText.text = "$caffTitle comments"
+        caffDetailsEmptyListText.text = getString(R.string.caff_details_comments_empty_list_text)
 
         caffDetailsBackButton.setOnClickListener {
             findNavController().navigate(
@@ -48,7 +46,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
                 R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
             )
         }
-        setupList()
+
         Handler(Looper.getMainLooper()).post {
             glideLoader(
                 requireContext(),
@@ -100,6 +98,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun showCommentList(viewState: CaffDetailsReady) {
+        setupList()
         caffDetailsProgressBar.visibility = View.GONE
         adapter.submitList(viewState.data)
     }
