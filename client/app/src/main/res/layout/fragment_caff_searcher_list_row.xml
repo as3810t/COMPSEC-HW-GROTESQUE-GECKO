@@ -42,10 +42,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="22sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/caffListCaffPreview"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/nextIcon"
             tools:text="CAFF title" />
 
         <ImageView

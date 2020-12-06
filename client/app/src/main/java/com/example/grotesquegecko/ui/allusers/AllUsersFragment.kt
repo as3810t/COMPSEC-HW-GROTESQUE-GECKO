@@ -3,6 +3,7 @@ package com.example.grotesquegecko.ui.allusers
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.afollestad.materialdialogs.MaterialDialog
@@ -47,7 +48,14 @@ class AllUsersFragment : RainbowCakeFragment<AllUsersViewState, AllUsersViewMode
 
     private fun showAllUsers(viewState: AllUsersReady) {
         allUsersProgressBar.visibility = View.GONE
-        adapter.submitList(viewState.allUsers)
+    }
+
+    override fun onEvent(event: OneShotEvent) {
+        when (event) {
+            is AllUsersViewModel.UserDatas -> {
+                adapter.submitList(event.users)
+            }
+        }
     }
 
     override fun onEditItemSelected(id: String) {

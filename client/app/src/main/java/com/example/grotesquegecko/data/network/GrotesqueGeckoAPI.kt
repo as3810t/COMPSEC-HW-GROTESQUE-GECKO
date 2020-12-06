@@ -45,6 +45,20 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<CaffList>>
 
     @Headers("accept: application/json")
+    @GET("/caff/{id}")
+    fun getCaffById(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<Caff>>
+
+    @Headers("accept: application/json")
+    @DELETE("/caff/{id}")
+    fun deleteCaff(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
     @GET("/caff/{id}/comment")
     fun getAllComments(
         @Header("Authorization") auth: String,
@@ -96,4 +110,36 @@ interface GrotesqueGeckoAPI {
         @Header("Authorization") auth: String,
         @Path("id") id: String
     ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @PUT("/caff/{id}/comment/{commentId}")
+    fun editComment(
+            @Header("Authorization") auth: String,
+            @Path("id") caffId: String,
+            @Path("commentId") commentId: String,
+            @Body body: RequestBody
+    ):Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @DELETE("/caff/{id}/comment/{commentId}")
+    fun deleteComment(
+        @Header("Authorization") auth: String,
+        @Path("id") caffId: String,
+        @Path("commentId") commentId: String
+    ): Deferred<Response<Void>>
+
+    @Headers("accept: application/json")
+    @POST("/caff")
+    fun createCaff(
+        @Header("Authorization") auth: String,
+        @Body body: RequestBody
+    ): Deferred<Response<Caff>>
+
+    @Headers("accept: application/json")
+    @PUT("/caff/{id}")
+    fun editCaffDatas(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String,
+        @Body body: RequestBody
+    ): Deferred<Response<Caff>>
 }

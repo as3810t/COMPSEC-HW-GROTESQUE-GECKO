@@ -5,19 +5,27 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import co.zsmb.rainbowcake.base.OneShotEvent
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
+import com.afollestad.materialdialogs.MaterialDialog
+import com.example.grotesquegecko.LoginActivity
 import com.example.grotesquegecko.R
+import com.example.grotesquegecko.ui.caffdetails.CaffDetailsViewModel.*
 import com.example.grotesquegecko.ui.common.glideLoader
 import kotlinx.android.synthetic.main.fragment_caff_details.*
 import okhttp3.ResponseBody
@@ -34,6 +42,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
 
     private lateinit var caffId: String
     private lateinit var caffTitle: String
+    private lateinit var userId: String
 
     private lateinit var adapter: CaffDetailsAdapter
 
@@ -48,7 +57,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
 
         initArguments()
 
-        caffDetailsEmptyListText.text = "$caffTitle comments"
+        caffDetailsEmptyListText.text = getString(R.string.caff_details_comments_empty_list_text)
 
         caffDetailsBackButton.setOnClickListener {
             findNavController().navigate(
@@ -62,8 +71,6 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
                 R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
             )
         }
-
-        setupList()
 
         Handler(Looper.getMainLooper()).post {
             glideLoader(
@@ -149,10 +156,16 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun setupList() {
-        adapter = CaffDetailsAdapter(requireContext())
+        adapter = CaffDetailsAdapter(requireContext(), userId, viewModel.myAccountIsUser())
         adapter.listener = this
         caffDetailsCommentList.adapter = adapter
         caffDetailsCommentList.emptyView = caffDetailsEmptyListText
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.getUserId()
     }
 
     private fun initArguments() {
@@ -160,55 +173,173 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
         caffTitle = arguments?.getString("caffTitle").toString()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        viewModel.load(caffId)
-    }
-
     override fun render(viewState: CaffDetailsViewState) {
         when (viewState) {
             is Loading -> showLoading()
-            is CaffDetailsReady -> showCommentList(viewState)
+            is CaffDetailsUserReady -> showcaffDetailsUserPage(viewState)
         }
     }
 
-    private fun showCommentList(viewState: CaffDetailsReady) {
+    private fun showcaffDetailsUserPage(viewState: CaffDetailsUserReady) {
+        setupList()
         caffDetailsProgressBar.visibility = View.GONE
         caffDetailsDownloading.visibility = View.GONE
-        adapter.submitList(viewState.data)
+        adapter.submitList(viewState.comments)
+
+        caffTitle = viewState.caffData.title
+        caffDetailsCaffTitle.text = caffTitle
+
+        var tagList = ""
+        for (tag in viewState.caffData.tags) {
+            tagList += if (tag != viewState.caffData.tags.last()) {
+                "$tag, "
+            } else {
+                tag
+            }
+        }
+
+        caffDetailsTags.text = tagList
+
+        if ((userId == viewState.caffData.ownerId) or !viewModel.myAccountIsUser()) {
+            caffDetailsEditCaffDatasButton.visibility = View.VISIBLE
+            caffDetailsEditCaffDatasButton.setOnClickListener {
+                setupEditCaffDialog(viewState.caffData.title, tagList)
+            }
+
+            caffDetailsDeleteCaffButton.visibility = View.VISIBLE
+            caffDetailsDeleteCaffButton.setOnClickListener {
+                showDeleteDialog()
+            }
+        } else {
+            caffDetailsEditCaffDatasButton.visibility = View.GONE
+            caffDetailsDeleteCaffButton.visibility = View.GONE
+        }
+    }
+
+    private fun showDeleteDialog() {
+        MaterialDialog(requireContext()).show {
+            noAutoDismiss()
+            title(text = getString(R.string.caff_details_delete_caff_file_title)).view.titleLayout.setBackgroundColor(
+                ContextCompat.getColor(context, R.color.colorPrimaryDark)
+            )
+            positiveButton(text = getString(R.string.caff_details_delete_caff_file_ok_button)) {
+                viewModel.deleteCaff(caffId)
+                it.dismiss()
+            }
+            negativeButton(text = getString(R.string.caff_details_delete_caff_file_cancel_button)) {
+                it.dismiss()
+            }
+        }
+    }
+
+    private fun setupEditCaffDialog(
+        title: String,
+        tags: String
+    ) {
+        val editCaffDialog = AlertDialog.Builder(context)
+            .setView(R.layout.fragment_caff_details_edit_caff)
+            .show()
+
+        editCaffDialog.findViewById<EditText>(R.id.editCaffDialogEditTitle).setText(title)
+
+        editCaffDialog.findViewById<EditText>(R.id.editCaffDialogEditTags).setText(tags)
+
+        editCaffDialog.findViewById<ImageView>(R.id.editCaffDialogCloseButton).setOnClickListener {
+            editCaffDialog.dismiss()
+        }
+
+        editCaffDialog.findViewById<Button>(R.id.editCaffDialogEditSaveButton).setOnClickListener {
+            viewModel.editCaffDatas(
+                caffId = caffId,
+                title = editCaffDialog.findViewById<EditText>(R.id.editCaffDialogEditTitle).text.toString(),
+                tags = editCaffDialog.findViewById<EditText>(R.id.editCaffDialogEditTags).text.toString()
+            )
+            editCaffDialog.dismiss()
+        }
     }
 
     private fun showLoading() {
         caffDetailsProgressBar.visibility = View.VISIBLE
         caffDetailsDownloading.visibility = View.GONE
+        caffDetailsSomethingWentWrong.visibility = View.GONE
+        caffDetailsEditCaffDatasButton.visibility = View.GONE
+        caffDetailsDeleteCaffButton.visibility = View.GONE
     }
 
-    override fun onItemSelected(id: String) {
-        // TODO("Not yet implemented")
+    override fun onCommentEdit(id: String, content: String) {
+        viewModel.editComment(caffId, id, content)
+    }
+
+    override fun onCommentDelete(id: String) {
+        viewModel.deleteComment(caffId, id)
     }
 
     override fun onEvent(event: OneShotEvent) {
         when (event) {
-            is CaffDetailsViewModel.Download -> {
-                val content = event.response?.headers()?.get("Content-Disposition")
-                val contentSplit = content!!.split("filename=")
-                fileName = contentSplit[1].replace("filename=", "").replace("\"", "").trim()
-
-                try {
-                    if (event.response?.body() != null) {
-                        writeResponseBodyToDisk(event.response?.body()!!)
-                    }
-                } catch (e: java.lang.Exception) {
-                    Timber.d(e.message)
-                }
-            }
-            is CaffDetailsViewModel.DownloadWasNotSuccessful -> {
-                caffDetailsDownloading.visibility = View.VISIBLE
-                caffDetailsDownloading.text =
-                    getString(R.string.caff_details_download_was_not_successful)
-            }
+            is Download -> startToDownload(event)
+            is DownloadWasNotSuccessful -> showDownloadWasNotSuccessful()
+            is WrongToken -> showWrongToken()
+            is UserId -> setupUserId(event)
+            is ErrorDuringLoadCaffDatas -> showLoadCaffErrorMessage()
+            is ErrorDuringEditCaffDatas -> showEditCaffErrorMessage()
+            is CaffWasDeleted -> goBackToCaffSearch()
+            is CaffDeleteFailed -> showCaffDeleteFailedMessage()
         }
+    }
+
+    private fun showCaffDeleteFailedMessage() {
+        caffDetailsSomethingWentWrong.visibility = View.VISIBLE
+        caffDetailsSomethingWentWrong.text =
+            getString(R.string.caff_details_caff_delete_was_failed)
+    }
+
+    private fun goBackToCaffSearch() {
+        findNavController().navigate(
+            CaffDetailsFragmentDirections.actionNavCaffDetailsToNavCaffs()
+        )
+    }
+
+    private fun startToDownload(event: Download) {
+        val content = event.response?.headers()?.get("Content-Disposition")
+        val contentSplit = content!!.split("filename=")
+        fileName = contentSplit[1].replace("filename=", "").replace("\"", "").trim()
+
+        try {
+            if (event.response?.body() != null) {
+                writeResponseBodyToDisk(event.response?.body()!!)
+            }
+        } catch (e: java.lang.Exception) {
+            Timber.d(e.message)
+        }
+    }
+
+    private fun showDownloadWasNotSuccessful() {
+        caffDetailsDownloading.visibility = View.VISIBLE
+        caffDetailsDownloading.text =
+            getString(R.string.caff_details_download_was_not_successful)
+    }
+
+    private fun showWrongToken() {
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    private fun setupUserId(event: UserId) {
+        userId = event.userId
+        viewModel.load(caffId)
+    }
+
+    private fun showLoadCaffErrorMessage() {
+        caffDetailsSomethingWentWrong.visibility = View.VISIBLE
+        caffDetailsSomethingWentWrong.text =
+            getString(R.string.caff_details_something_went_wrong_during_loading_caffs_datas)
+    }
+
+    private fun showEditCaffErrorMessage() {
+        caffDetailsSomethingWentWrong.visibility = View.VISIBLE
+        caffDetailsSomethingWentWrong.text =
+            getString(R.string.caff_details_edit_caff_datas_error)
     }
 
     private fun writeResponseBodyToDisk(body: ResponseBody): Boolean {
