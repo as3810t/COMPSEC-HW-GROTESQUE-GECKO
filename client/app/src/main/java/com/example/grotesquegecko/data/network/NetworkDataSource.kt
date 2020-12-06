@@ -1,12 +1,13 @@
 package com.example.grotesquegecko.data.network
 
+import android.content.Context
 import android.net.Uri
-import android.os.FileUtils
 import com.example.grotesquegecko.data.network.models.*
 import com.example.grotesquegecko.data.network.token.Token
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class NetworkDataSource @Inject constructor(
     private val grotesqueGeckoAPI: GrotesqueGeckoAPI,
-    private val token: Token
+    private val token: Token,
+    private val context: Context
 ) {
 
     suspend fun registerUser(
@@ -125,7 +127,7 @@ class NetworkDataSource @Inject constructor(
         return commentList
     }
 
-    suspend fun getMe():UserData? {
+    suspend fun getMe(): UserData? {
         if (token.hasToken()) {
             val response = grotesqueGeckoAPI.getMe(auth = "Bearer ${token.getToken()!!}").await()
             return response.body()
@@ -134,13 +136,13 @@ class NetworkDataSource @Inject constructor(
     }
 
     suspend fun createComment(
-            content: String,
-            id: String
+        content: String,
+        id: String
     ): retrofit2.Response<CaffComment> {
         val requestBody: RequestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("content", content)
-                .build()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("content", content)
+            .build()
         return grotesqueGeckoAPI.createComment(
             auth = "Bearer ${token.getToken()!!}",
             body = requestBody,
@@ -149,48 +151,55 @@ class NetworkDataSource @Inject constructor(
     }
 
     suspend fun editComment(
-            caffId: String,
-            commentId: String,
-            content: String
+        caffId: String,
+        commentId: String,
+        content: String
     ): retrofit2.Response<CaffComment> {
         val requestBody: RequestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("content", content)
-                .build()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("content", content)
+            .build()
         return grotesqueGeckoAPI.editComment(
-                auth = "Bearer ${token.getToken()!!}",
-                caffId = caffId,
-                commentId = commentId,
-                body = requestBody
+            auth = "Bearer ${token.getToken()!!}",
+            caffId = caffId,
+            commentId = commentId,
+            body = requestBody
         ).await()
     }
 
     suspend fun deleteComment(
-            caffId: String,
-            commentId: String
+        caffId: String,
+        commentId: String
     ): retrofit2.Response<Void> {
         return grotesqueGeckoAPI.deleteComment(
-                auth = "Bearer ${token.getToken()!!}",
-                caffId = caffId,
-                commentId = commentId
+            auth = "Bearer ${token.getToken()!!}",
+            caffId = caffId,
+            commentId = commentId
         ).await()
     }
 
     suspend fun createCaff(
-            filePath: String,
-            title: String,
-            tags: String
+        fileUri: Uri?,
+        title: String,
+        tags: String,
+        selectedFile: File
     ): retrofit2.Response<Caff> {
-        val file = File(filePath)
-        val requestBody: RequestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
-                .addFormDataPart("tags", tags)
-                .addFormDataPart("title", title)
-                .build()
+        val requestBody: MultipartBody.Builder = MultipartBody.Builder()
+        requestBody.apply {
+            setType(MultipartBody.FORM)
+            addFormDataPart(
+                "file",
+                "${selectedFile.name}.caff",
+                selectedFile.asRequestBody(
+                    fileUri?.let { context.contentResolver.getType(it) }!!.toMediaTypeOrNull()
+                )
+            )
+            addFormDataPart("tags", tags)
+            addFormDataPart("title", title)
+        }
         return grotesqueGeckoAPI.createCaff(
-                auth = "Bearer ${token.getToken()!!}",
-                body = requestBody
+            auth = "Bearer ${token.getToken()!!}",
+            body = requestBody.build()
         ).await()
     }
 }
