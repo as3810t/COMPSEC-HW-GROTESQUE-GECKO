@@ -155,7 +155,7 @@ public class CAFFController {
             id,
             title,
             tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
-            ByteBuffer.wrap(file.getBytes())
+            file == null ? null : ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(caff);
     }

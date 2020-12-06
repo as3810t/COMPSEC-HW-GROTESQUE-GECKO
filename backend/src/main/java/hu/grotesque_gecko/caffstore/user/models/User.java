@@ -67,6 +67,13 @@ public class User implements UserDetails {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(
+        mappedBy = "lastModifiedBy",
+        cascade = CascadeType.PERSIST,
+        orphanRemoval = true
+    )
+    private List<Comment> lastModifiedComments = new ArrayList<>();
+
+    @OneToMany(
         mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true
