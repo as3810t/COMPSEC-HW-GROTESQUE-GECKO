@@ -1,7 +1,6 @@
 package hu.grotesque_gecko.caffstore.caff.models;
 
 import hu.grotesque_gecko.caffstore.user.models.User;
-import hu.grotesque_gecko.caffstore.utils.StringListConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +34,7 @@ public class CAFF {
     private String title;
 
     @Column
-    @Convert(converter = StringListConverter.class)
-    private List<String> tags;
+    private String tags;
 
     @OneToOne(
         mappedBy = "caff",

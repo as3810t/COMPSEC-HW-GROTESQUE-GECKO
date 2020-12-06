@@ -109,7 +109,7 @@ public class CAFFService {
 
         CAFF newCaff = CAFF.builder()
             .title(title)
-            .tags(tags)
+            .tags(String.join(";", tags))
             .owner(currentUser)
             .lastModifiedBy(currentUser)
             .lastModifiedDate(new Date())
@@ -161,7 +161,7 @@ public class CAFFService {
         checkParameter(!title.isEmpty(), CAFFTitleCannotBeEmptyException.class);
 
         caff.setTitle(title);
-        caff.setTags(tags);
+        caff.setTags(String.join(";", tags));
 
         if(file != null) {
             fileRepository.delete(caff.getFileData());

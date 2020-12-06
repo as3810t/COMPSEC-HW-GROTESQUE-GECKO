@@ -68,14 +68,14 @@ public class CAFFController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public @ResponseBody CAFFDTO createOne(
         @AuthenticationPrincipal User currentUser,
-        @RequestParam String title,
+        @RequestPart String title,
         @RequestPart(required = false) String tags,
         @RequestPart MultipartFile file
     ) {
         CAFF newCaff = caffService.createOne(
             currentUser,
             title,
-            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
+            tags == null ? Collections.emptyList() : Arrays.stream(tags.split("\\|")).filter(e -> !e.equals("")).collect(Collectors.toList()),
             ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(newCaff);
@@ -146,7 +146,7 @@ public class CAFFController {
     public @ResponseBody CAFFDTO editOne(
         @AuthenticationPrincipal User currentUser,
         @PathVariable String id,
-        @RequestParam String title,
+        @RequestPart String title,
         @RequestPart(required = false) String tags,
         @RequestPart(required = false) MultipartFile file
     ) {
@@ -154,8 +154,8 @@ public class CAFFController {
             currentUser,
             id,
             title,
-            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
-            ByteBuffer.wrap(file.getBytes())
+            tags == null ? Collections.emptyList() : Arrays.stream(tags.split("\\|")).filter(e -> !e.equals("")).collect(Collectors.toList()),
+            file == null ? null : ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(caff);
     }
@@ -249,7 +249,7 @@ public class CAFFController {
         return CAFFDTO.builder()
             .id(caff.getId())
             .title(caff.getTitle())
-            .tags(caff.getTags())
+            .tags(Arrays.asList(caff.getTags().split(";")))
             .ownerId(caff.getOwner().getId())
             .ownerName(caff.getOwner().getUsername())
             .lastModifiedById(caff.getLastModifiedBy().getId())
