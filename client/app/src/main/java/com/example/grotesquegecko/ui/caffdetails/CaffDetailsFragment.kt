@@ -14,11 +14,11 @@ import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.example.grotesquegecko.LoginActivity
 import com.example.grotesquegecko.R
 import com.example.grotesquegecko.ui.caffsearcher.CaffSearcherViewModel
-import com.squareup.picasso.Picasso
+import com.example.grotesquegecko.ui.common.glideLoader
 import kotlinx.android.synthetic.main.fragment_caff_details.*
 
 class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetailsViewModel>(),
-    CaffDetailsAdapter.Listener{
+    CaffDetailsAdapter.Listener {
 
     override fun provideViewModel() = getViewModelFromFactory()
     override fun getViewResource() = R.layout.fragment_caff_details
@@ -27,7 +27,7 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     private lateinit var caffTitle: String
     private lateinit var userId: String
 
-    private lateinit var adapter : CaffDetailsAdapter
+    private lateinit var adapter: CaffDetailsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,15 +45,16 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
         caffDetailsAddNewCommentButton.setOnClickListener {
             val bundle = bundleOf("caffId" to caffId, "caffTitle" to caffTitle)
             findNavController().navigate(
-                    R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
+                R.id.action_nav_caff_details_to_nav_add_new_comment, bundle
             )
         }
+        setupList()
         Handler(Looper.getMainLooper()).post {
-            Picasso
-                    .with(context)
-                    .load("https://gecko.stripedpossum.dev/caff/${caffId}/preview")
-                    .placeholder(R.drawable.icon_gecko)
-                    .into(caffDetailsCaffPreview)
+            glideLoader(
+                requireContext(),
+                caffDetailsCaffPreview,
+                "https://gecko.stripedpossum.dev/caff/${caffId}/preview"
+            )
         }
         caffListTitle.text = caffTitle
     }
@@ -99,7 +100,6 @@ class CaffDetailsFragment : RainbowCakeFragment<CaffDetailsViewState, CaffDetail
     }
 
     private fun showCommentList(viewState: CaffDetailsReady) {
-        setupList()
         caffDetailsProgressBar.visibility = View.GONE
         adapter.submitList(viewState.data)
     }

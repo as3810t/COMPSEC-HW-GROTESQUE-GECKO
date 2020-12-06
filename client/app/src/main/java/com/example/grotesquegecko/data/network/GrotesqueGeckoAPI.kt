@@ -53,18 +53,41 @@ interface GrotesqueGeckoAPI {
     ): Deferred<Response<CommentList>>
 
     @Headers("accept: application/json")
-    @GET("/user/me")
-    fun getMe(
-            @Header("Authorization") auth: String
-    ): Deferred<Response<UserData>>
-
-    @Headers("accept: application/json")
     @POST("/caff/{id}/comment")
     fun createComment(
         @Header("Authorization") auth: String,
         @Body body: RequestBody,
-        @Path("id") id : String
+        @Path("id") id: String
     ): Deferred<Response<CaffComment>>
+
+    @Headers("accept: application/json")
+    @PUT("/user/{id}")
+    fun editUserData(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String,
+        @Body body: RequestBody
+    ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @GET("/user/me")
+    fun getMe(
+        @Header("Authorization") auth: String
+    ): Deferred<Response<UserData>>
+
+    @Headers("accept: application/json")
+    @GET("/user")
+    fun getAllUsers(
+        @Header("Authorization") auth: String,
+        @Query("offset") offset: Int?,
+        @Query("pageSize") pageSize: Int?
+    ): Deferred<Response<AllUsers>>
+
+    @Headers("accept: application/json")
+    @DELETE("/user/{id}")
+    fun deleteUser(
+        @Header("Authorization") auth: String,
+        @Path("id") id: String
+    ): Deferred<Response<UserData>>
 
     @Headers("accept: application/json")
     @PUT("/caff/{id}/comment/{commentId}")

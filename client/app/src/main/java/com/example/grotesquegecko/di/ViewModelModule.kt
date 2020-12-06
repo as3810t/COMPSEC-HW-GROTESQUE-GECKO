@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import co.zsmb.rainbowcake.dagger.ViewModelKey
 import com.example.grotesquegecko.ui.addnewcaff.AddNewCaffViewModel
 import com.example.grotesquegecko.ui.addnewcomment.AddNewCommentViewModel
+import com.example.grotesquegecko.ui.allusers.AllUsersViewModel
 import com.example.grotesquegecko.ui.blank.BlankViewModel
 import com.example.grotesquegecko.ui.caffdetails.CaffDetailsViewModel
 import com.example.grotesquegecko.ui.caffsearcher.CaffSearcherViewModel
 import com.example.grotesquegecko.ui.login.LoginViewModel
+import com.example.grotesquegecko.ui.userdata.UserDataViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -45,4 +47,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AddNewCommentViewModel::class)
     abstract fun bindAddNewCommentViewModel(addNewCommentViewModel: AddNewCommentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserDataViewModel::class)
+    abstract fun bindUserDataViewModel(userDataViewModel: UserDataViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AllUsersViewModel::class)
+    abstract fun bindAllUsersViewModel(allUsersViewModel: AllUsersViewModel): ViewModel
 }

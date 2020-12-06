@@ -1,5 +1,6 @@
 package com.example.grotesquegecko
 
+import android.content.Context
 import co.zsmb.rainbowcake.config.Loggers
 import co.zsmb.rainbowcake.config.rainbowCake
 import co.zsmb.rainbowcake.dagger.RainbowCakeApplication
@@ -30,3 +31,7 @@ class GrotesqueGeckoApplication : RainbowCakeApplication() {
         Timber.plant(Timber.DebugTree())
     }
 }
+
+val Context.injector
+    get() = (applicationContext as? GrotesqueGeckoApplication)?.injector
+        ?: throw IllegalArgumentException("Application must extend GrotesqueGeckoApplication.")

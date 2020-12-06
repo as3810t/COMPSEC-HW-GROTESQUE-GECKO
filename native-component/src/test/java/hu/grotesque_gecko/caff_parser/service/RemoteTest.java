@@ -39,7 +39,7 @@ public class RemoteTest {
         final ByteBuffer bmpBuffer = readFile("src/test/resources/test.bmp");
 
         final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:50051")
-            .usePlaintext(true)
+            .usePlaintext()
             .build();
 
         try {

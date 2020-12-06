@@ -5,6 +5,7 @@ import co.zsmb.rainbowcake.dagger.RainbowCakeComponent
 import co.zsmb.rainbowcake.dagger.RainbowCakeModule
 import com.example.grotesquegecko.MainActivity
 import com.example.grotesquegecko.data.network.NetworkModule
+import com.example.grotesquegecko.data.network.token.Token
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -20,6 +21,7 @@ import javax.inject.Singleton
 )
 interface AppComponent : RainbowCakeComponent {
     fun inject(mainActivity: MainActivity)
+    fun getToken(): Token
 
     @Component.Builder
     interface Builder {

@@ -19,8 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/nav_person"
-        android:name="com.example.grotesquegecko.ui.blank.BlankFragment"
-        tools:layout="@layout/fragment_blank" />
+        android:name="com.example.grotesquegecko.ui.userdata.UserDataFragment"
+        tools:layout="@layout/fragment_user_data">
+        <action
+            android:id="@+id/action_nav_person_to_allUsersFragment"
+            app:destination="@id/allUsersFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_caff_details"
         android:name="com.example.grotesquegecko.ui.caffdetails.CaffDetailsFragment"
@@ -49,15 +53,24 @@
     <fragment
         android:id="@+id/nav_add_new_comment"
         android:name="com.example.grotesquegecko.ui.addnewcomment.AddNewCommentFragment"
-        android:label="AddNewCommentFragment" >
+        android:label="AddNewCommentFragment">
         <argument
             android:name="caffId"
             android:defaultValue="caffId" />
         <argument
             android:name="caffTitle"
-            android:defaultValue="caffTitle"/>
+            android:defaultValue="caffTitle" />
         <action
             android:id="@+id/action_nav_add_new_comment_to_nav_caff_details"
             app:destination="@id/nav_caff_details" />
+    </fragment>
+    <fragment
+        android:id="@+id/allUsersFragment"
+        android:name="com.example.grotesquegecko.ui.allusers.AllUsersFragment"
+        android:label="AllUsersFragment"
+        tools:layout="@layout/fragment_all_users">
+        <action
+            android:id="@+id/action_allUsersFragment_to_nav_person"
+            app:destination="@id/nav_person" />
     </fragment>
 </navigation>
