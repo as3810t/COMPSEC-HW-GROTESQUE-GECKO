@@ -66,7 +66,7 @@ class NetworkDataSource @Inject constructor(
         return grotesqueGeckoAPI.passwordReset(requestBody).await().code() == 200
     }
 
-    suspend fun getCaffList(): MutableList<CaffPreview> {
+    suspend fun getCaffList(tag: String, title: String, userId: String): MutableList<CaffPreview> {
         if (!token.hasToken()) {
             return mutableListOf()
         }
@@ -75,9 +75,9 @@ class NetworkDataSource @Inject constructor(
             auth = "Bearer ${token.getToken()!!}",
             offset = null,
             pageSize = null,
-            tag = "",
-            title = "",
-            userId = ""
+            tag = tag,
+            title = title,
+            userId = userId
         ).await()
 
         val caffList = mutableListOf<CaffPreview>()
@@ -93,6 +93,34 @@ class NetworkDataSource @Inject constructor(
             }
         }
         return caffList
+    }
+
+    suspend fun getCaffById(caffId: String): Caff? {
+        if (!token.hasToken()) {
+            return null
+        }
+
+        val response = grotesqueGeckoAPI.getCaffById(
+            auth = "Bearer ${token.getToken()}",
+            id = caffId
+        ).await()
+
+        return if (response.isSuccessful) {
+            response.body()
+        } else null
+    }
+
+    suspend fun deleteCaff(caffId: String): Boolean {
+        if (!token.hasToken()) {
+            return false
+        }
+
+        val response = grotesqueGeckoAPI.deleteCaff(
+            auth = "Bearer ${token.getToken()}",
+            id = caffId
+        ).await()
+
+        return response.isSuccessful
     }
 
     suspend fun getCommentList(id: String): MutableList<CaffComment> {
@@ -287,5 +315,24 @@ class NetworkDataSource @Inject constructor(
             auth = "Bearer ${token.getToken()!!}",
             body = requestBody.build()
         ).await()
+    }
+
+    suspend fun editCaffDatas(caffId: String, title: String, tags: String): Caff? {
+        return if (token.hasToken()) {
+            val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("tags", tags)
+                .addFormDataPart("title", title)
+                .build()
+
+            val response = grotesqueGeckoAPI.editCaffDatas(
+                auth = "Bearer ${token.getToken()}",
+                id = caffId,
+                body = requestBody
+            ).await()
+            if (response.isSuccessful) {
+                response.body()
+            } else null
+        } else null
     }
 }

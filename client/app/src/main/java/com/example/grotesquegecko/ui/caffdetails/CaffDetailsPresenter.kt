@@ -1,6 +1,7 @@
 package com.example.grotesquegecko.ui.caffdetails
 
 import co.zsmb.rainbowcake.withIOContext
+import com.example.grotesquegecko.data.network.models.Caff
 import com.example.grotesquegecko.data.network.models.CaffComment
 import com.example.grotesquegecko.data.network.models.UserData
 import com.example.grotesquegecko.domain.interactors.CaffInterctor
@@ -18,9 +19,14 @@ class CaffDetailsPresenter @Inject constructor(
         caffInterctor.getCommentList(id)
     }
 
+    suspend fun getCaffById(caffId: String): Caff? = withIOContext {
+        caffInterctor.getCaffById(caffId)
+    }
+
     suspend fun downloadCaff(id: String): Response<ResponseBody>? = withIOContext {
         return@withIOContext caffInterctor.downloadCaff(id)
     }
+
     suspend fun getMe(): UserData? = withIOContext {
         userInteractor.getUserData()
     }
@@ -35,5 +41,17 @@ class CaffDetailsPresenter @Inject constructor(
 
     fun myAccountIsUser(): Boolean {
         return userInteractor.myAccountIsUser()
+    }
+
+    suspend fun editCaffDatas(title: String, tags: String, caffId: String): Caff? = withIOContext {
+        caffInterctor.editCaffDatas(
+            caffId = caffId,
+            title = title,
+            tags = tags
+        )
+    }
+
+    suspend fun deleteCaff(caffId: String): Boolean = withIOContext {
+        caffInterctor.deleteCaff(caffId)
     }
 }

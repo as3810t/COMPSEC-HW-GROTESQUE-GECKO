@@ -11,6 +11,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.dagger.getViewModelFromFactory
 import com.example.grotesquegecko.LoginActivity
 import com.example.grotesquegecko.R
+import com.example.grotesquegecko.ui.caffdetails.CaffDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_caff_searcher.*
 import timber.log.Timber
 
@@ -21,6 +22,12 @@ class CaffSearcherFragment :
     override fun getViewResource() = R.layout.fragment_caff_searcher
 
     private lateinit var adapter: CaffSearcherAdapter
+    private lateinit var userId: String
+    val SEARCH_BY_USER = 0
+    val SEARCH_BY_TITLE = 1
+    val SEARCH_BY_TAGS = 2
+
+    var SEARCH_TYPE = SEARCH_BY_TITLE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +53,53 @@ class CaffSearcherFragment :
                 .setNegativeButton(R.string.logout_dialog_cancel, null)
                 .show()
         }
+
+        caffSelectorSearchField.setHint("Keresés cím szerint")
+
+        caffSelectorIcon.setOnClickListener {
+            when (SEARCH_TYPE) {
+                SEARCH_BY_TITLE -> {
+                    caffSelectorIcon.setImageResource(R.drawable.icon_tags)
+                    SEARCH_TYPE = SEARCH_BY_TAGS
+                    caffSelectorSearchField.isEnabled = true
+                    caffSelectorSearchField.setText("")
+                    caffSelectorSearchField.setHint("Keresés tagek szerint")
+                }
+                SEARCH_BY_TAGS -> {
+                    caffSelectorIcon.setImageResource(R.drawable.icon_person)
+                    SEARCH_TYPE = SEARCH_BY_USER
+                    caffSelectorSearchField.isEnabled = false
+                    caffSelectorSearchField.setText(getString(R.string.caff_searcher_my_caffs))
+                }
+                SEARCH_BY_USER -> {
+                    caffSelectorIcon.setImageResource(R.drawable.icon_title)
+                    SEARCH_TYPE = SEARCH_BY_TITLE
+                    caffSelectorSearchField.isEnabled = true
+                    caffSelectorSearchField.setText("")
+                    caffSelectorSearchField.setHint("Keresés cím szerint")
+                }
+            }
+        }
+
+        caffSelectorSearchButton.setOnClickListener {
+            when (SEARCH_TYPE) {
+                SEARCH_BY_TITLE -> viewModel.getCaffListByParameter(
+                    tag = "",
+                    title = caffSelectorSearchField.text.toString(),
+                    userId = ""
+                )
+                SEARCH_BY_TAGS -> viewModel.getCaffListByParameter(
+                    tag = caffSelectorSearchField.text.toString(),
+                    title = "",
+                    userId = ""
+                )
+                SEARCH_BY_USER -> viewModel.getCaffListByParameter(
+                    tag = "",
+                    title = "",
+                    userId = userId
+                )
+            }
+        }
     }
 
     private fun setupList() {
@@ -58,7 +112,7 @@ class CaffSearcherFragment :
     override fun onStart() {
         super.onStart()
 
-        viewModel.load()
+        viewModel.getUserId()
     }
 
     override fun onEvent(event: OneShotEvent) {
@@ -68,7 +122,20 @@ class CaffSearcherFragment :
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }
+            is CaffDetailsViewModel.WrongToken -> showWrongToken()
+            is CaffDetailsViewModel.UserId -> setupUserId(event)
         }
+    }
+
+    private fun showWrongToken() {
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    private fun setupUserId(event: CaffDetailsViewModel.UserId) {
+        userId = event.userId
+        viewModel.load()
     }
 
     override fun render(viewState: CaffSearcherViewState) {

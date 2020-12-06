@@ -74,7 +74,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/margin_small"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_pictures"
+            android:src="@drawable/icon_title"
             tools:ignore="ContentDescription" />
 
         <androidx.cardview.widget.CardView

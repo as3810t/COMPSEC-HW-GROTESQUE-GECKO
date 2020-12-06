@@ -52,6 +52,10 @@
     <!-- Caff Details -->
     <string name="caff_details_page_title">Részletek</string>
     <string name="add_new_caff_page_title">Új caff</string>
+    <string name="caff_searcher_my_caffs">Saját CAFF-ok</string>
+    <string name="caff_details_something_went_wrong_during_loading_caffs_datas">Hiba történt az adatok betöltése közben.</string>
+
+    <!-- Comments -->
     <string name="comment">Komment</string>
     <string name="add_new_comment_page_title">Új Komment</string>
     <string name="comment_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>
@@ -63,11 +67,24 @@
     <string name="details_fragment_edit_comment_dialog_message">Itt változtathatod meg kommented tartalmát.</string>
     <string name="details_fragment_edit_your_comment">Komment</string>
     <string name="caff_details_comments_empty_list_text">Kommentek</string>
+
+    <!-- Download Caff -->
     <string name="caff_details_download_is_in_progress">A letöltés folyamatban...</string>
     <string name="caff_details_download_was_not_successful">A letöltés sikertelen volt.</string>
     <string name="caff_details_download_is_successful">A letöltés befejeződött.</string>
     <string name="caff_details_permission_show_rational">A letöltéshez meg kell adnod az engedélyt a fájlok eléréséhez.</string>
     <string name="caff_details_permission_denied">Fájlok elérése megtagadva.</string>
+
+    <!-- Edit Caff details -->
+    <string name="caff_details_edit_caff_dialog_title">Caff adatok megváltoztatása</string>
+    <string name="caff_details_edit_caff_save">Mentés</string>
+    <string name="caff_details_edit_caff_datas_error">Hiba történt az adatok módosítása közben.</string>
+
+    <!-- Delete Caff file -->
+    <string name="caff_details_caff_delete_was_failed">A törlés közben hiba történt.</string>
+    <string name="caff_details_delete_caff_file_title">Biztosan törölni szeretnéd ezt a CAFF file-t?</string>
+    <string name="caff_details_delete_caff_file_ok_button">Igen</string>
+    <string name="caff_details_delete_caff_file_cancel_button">Nem</string>
 
     <!-- User Data -->
     <string name="user_data_page_title">Felhasználói adatok</string>
@@ -88,11 +105,11 @@
     <string name="user_data_password_successfully_changed">Jelszó sikeresen megváltoztatva</string>
 
     <!-- Add new caff -->
-    <string name="add_new_caff_file_path">File path...</string>
-    <string name="add_new_caff_browse">Browse</string>
-    <string name="add_new_caff_caff_title">Title</string>
+    <string name="add_new_caff_file_path">File elérési útvonala...</string>
+    <string name="add_new_caff_browse">Keresés</string>
+    <string name="add_new_caff_caff_title">Cím</string>
     <string name="add_new_caff_caff_tags">tag1, tag2...</string>
-    <string name="add_new_caff_upload">Upload</string>
+    <string name="add_new_caff_upload">Feltöltés</string>
     <string name="add_new_caff_choose_caff_file">Válassz egy CAFF fájlt</string>
     <string name="add_new_caff_write_title">Add meg egy címet</string>
     <string name="caff_fragment_something_went_wrong">Hiba történt, kérlek próbáld újra</string>

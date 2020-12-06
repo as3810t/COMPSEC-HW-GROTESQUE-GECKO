@@ -10,10 +10,14 @@ class CaffDetailsViewModel @Inject constructor(
     private val caffDetailsPresenter: CaffDetailsPresenter
 ) : RainbowCakeViewModel<CaffDetailsViewState>(Loading) {
     data class UserId(
-            var userId: String
-    ): OneShotEvent
+        var userId: String
+    ) : OneShotEvent
 
-    object WrongToken: OneShotEvent
+    object WrongToken : OneShotEvent
+    object ErrorDuringLoadCaffDatas : OneShotEvent
+    object ErrorDuringEditCaffDatas : OneShotEvent
+    object CaffWasDeleted : OneShotEvent
+    object CaffDeleteFailed : OneShotEvent
 
     data class Download(
         var response: Response<ResponseBody>?
@@ -22,7 +26,12 @@ class CaffDetailsViewModel @Inject constructor(
     object DownloadWasNotSuccessful : OneShotEvent
 
     fun load(id: String) = execute {
-        viewState = CaffDetailsReady(caffDetailsPresenter.getCommentList(id))
+        val caffData = caffDetailsPresenter.getCaffById(id)
+        if (caffData == null) {
+            postEvent(ErrorDuringLoadCaffDatas)
+        } else {
+            viewState = CaffDetailsUserReady(caffDetailsPresenter.getCommentList(id), caffData)
+        }
     }
 
     fun downloadCaff(id: String) = execute {
@@ -33,6 +42,7 @@ class CaffDetailsViewModel @Inject constructor(
             postEvent(Download(inputStream))
         }
     }
+
     fun getUserId() = execute {
         val user = caffDetailsPresenter.getMe()
         if (user == null) {
@@ -54,5 +64,25 @@ class CaffDetailsViewModel @Inject constructor(
 
     fun myAccountIsUser(): Boolean {
         return caffDetailsPresenter.myAccountIsUser()
+    }
+
+    fun editCaffDatas(title: String, tags: String, caffId: String) = execute {
+        val caffDatas = caffDetailsPresenter.editCaffDatas(
+            caffId = caffId,
+            title = title,
+            tags = tags
+        )
+        if (caffDatas == null) {
+            postEvent(ErrorDuringEditCaffDatas)
+        } else {
+            viewState =
+                CaffDetailsUserReady((viewState as CaffDetailsUserReady).comments, caffDatas)
+        }
+    }
+
+    fun deleteCaff(caffId: String) = execute {
+        if (caffDetailsPresenter.deleteCaff(caffId)) {
+            postEvent(CaffWasDeleted)
+        } else postEvent(CaffDeleteFailed)
     }
 }
