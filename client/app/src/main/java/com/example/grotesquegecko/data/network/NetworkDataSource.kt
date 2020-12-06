@@ -1,11 +1,6 @@
 package com.example.grotesquegecko.data.network
 
 import android.content.Context
-import com.example.grotesquegecko.data.network.models.CaffComment
-import com.example.grotesquegecko.data.network.models.CaffPreview
-import com.example.grotesquegecko.data.network.models.LoginData
-import com.example.grotesquegecko.data.network.models.UserData
-import android.content.Context
 import android.net.Uri
 import com.example.grotesquegecko.data.network.models.*
 import com.example.grotesquegecko.data.network.token.Token
@@ -13,9 +8,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
