@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -66,13 +67,13 @@ public class CAFFService {
         if(!userId.isEmpty()) {
             User user = userService.internalFindOneById(userId);
             if(!title.isEmpty() && !tag.isEmpty()) {
-                caffs = caffRepository.findAllByOwnerAndTitleContainingAndTagsContaining(user, title, tag, pageRequest);
+                caffs = caffRepository.findAllByOwnerAndTitleContainingAndTagsContaining(user, title, Collections.singletonList(tag), pageRequest);
             }
             else if(!title.isEmpty()) {
                 caffs = caffRepository.findAllByOwnerAndTitleContaining(user, title, pageRequest);
             }
             else if(!tag.isEmpty()) {
-                caffs = caffRepository.findAllByOwnerAndTagsContaining(user, tag, pageRequest);
+                caffs = caffRepository.findAllByOwnerAndTagsContaining(user, Collections.singletonList(tag), pageRequest);
             }
             else {
                 caffs = caffRepository.findAllByOwner(user, pageRequest);
@@ -86,7 +87,7 @@ public class CAFFService {
                 caffs = caffRepository.findAllByTitleContaining(title, pageRequest);
             }
             else if(!tag.isEmpty()) {
-                caffs = caffRepository.findAllByTagsContaining(tag, pageRequest);
+                caffs = caffRepository.findAllByTagsContaining(Collections.singletonList(tag), pageRequest);
             }
             else {
                 caffs = caffRepository.findAll(pageRequest);

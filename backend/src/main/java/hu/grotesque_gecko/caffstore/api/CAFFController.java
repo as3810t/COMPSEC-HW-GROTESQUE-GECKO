@@ -75,7 +75,7 @@ public class CAFFController {
         CAFF newCaff = caffService.createOne(
             currentUser,
             title,
-            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
+            tags == null ? Collections.emptyList() : Arrays.stream(tags.split("\\|")).filter(e -> !e.equals("")).collect(Collectors.toList()),
             ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(newCaff);
@@ -154,7 +154,7 @@ public class CAFFController {
             currentUser,
             id,
             title,
-            tags == null ? Collections.emptyList() : Arrays.asList(tags.split("\\|")),
+            tags == null ? Collections.emptyList() : Arrays.stream(tags.split("\\|")).filter(e -> !e.equals("")).collect(Collectors.toList()),
             file == null ? null : ByteBuffer.wrap(file.getBytes())
         );
         return caffToDTO(caff);
